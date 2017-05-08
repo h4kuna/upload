@@ -1,0 +1,14 @@
+php:
+    date.timezone: Europe/Prague
+
+application:
+	scanDirs: false
+
+services:
+	- Salamium\Testinium\FileUploadFactory(%tempDir%)
+
+extensions:
+    uploadExtension: h4kuna\Upload\DI\UploadExtension
+
+uploadExtension:
+	destinationDir: %tempDir%/upload
