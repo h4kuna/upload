@@ -10,9 +10,9 @@ class Upload
 	/** @var DocumentRoot */
 	private $documentRoot;
 
-	public function __construct(DocumentRoot $context)
+	public function __construct(DocumentRoot $documentRoot)
 	{
-		$this->documentRoot = $context;
+		$this->documentRoot = $documentRoot;
 	}
 
 	/**
