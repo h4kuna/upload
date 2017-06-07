@@ -22,6 +22,10 @@ class UploadExtension extends CompilerExtension
 		$builder->addDefinition($this->prefix('documentRoot'))
 			->setClass('h4kuna\Upload\DocumentRoot', [$config['destinationDir']]);
 
+		// FileResponseFactory
+		$builder->addDefinition($this->prefix('fileResponseFactory'))
+			->setClass('h4kuna\Upload\FileResponseFactory');
+
 		$builder->addDefinition($this->prefix('upload'))
 			->setClass('h4kuna\Upload\Upload');
 	}

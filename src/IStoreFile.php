@@ -4,9 +4,12 @@ namespace h4kuna\Upload;
 
 interface IStoreFile
 {
-	/**
-	 * Use this interface for entity and return string from Upload::save
-	 * @return string
-	 */
+	/** @return string */
 	function getRelativePath();
+
+	/** @return string|NULL */
+	function getName();
+
+	/** @return string|NULL */
+	function getContentType();
 }

@@ -41,23 +41,36 @@ $relativeDir = $upload->save($file);
 $relativeDir = $upload->save($file, 'subdir/by/id');
 
 if($relativeDir !== NULL) {
-	// example how to save to database
+	// example how to save to database data for IStoreFile
 	$fileTable->insert([
 		'name' => $uploadFile->getName(),
-		'size' => $uploadFile->getSize(),
 		'filesystem' => $relativePath,
 		'type' => $uploadFile->getContentType(),
+		// optional
+		'size' => $uploadFile->getSize(),
 	]);
 } else {
 	// upload is faild
 }
 ```
 
-Now create absolute path for download file.
+Now create FileResponse for download file.
 ```php
-/* @var $documentRoot h4kuna\Upload\DocumentRoot */
-$documentRoot = $container->getService('uploadExtension.documentRoot');
+/* @var $fileResponseFactory h4kuna\Upload\FileResponseFactory */
+$fileResponseFactory = $container->getService('uploadExtension.fileResponseFactory');
+```
 
-// this create from relative path whose stored in database, absolute path for download file
-dump($documentRoot->createAbsolutePath($fileTable->get(1)->filesystem));
+If you use in presenter
+```php
+// this create from data whose stored in database
+$file = new File(...); // instance of IStoreFile
+$presenter->sendResponse($fileResponseFactory->create($file));
+```
+Or if you use own script
+```php
+$file = new File(...); // instance of IStoreFile
+if($fileResponseFactory->send($file) === FALSE) {
+	$response->setCode(Nette\Http\IResponse::S404_NOT_FOUND);
+}
+exit;
 ```
