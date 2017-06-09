@@ -25,10 +25,12 @@ class Upload
 	{
 		if (!$fileUpload->isOk()) {
 			return NULL;
+		} elseif ($destination) {
+			$destination = trim($destination, '\/') . DIRECTORY_SEPARATOR;
 		}
 
 		do {
-			$relativePath = $this->createName($fileUpload, $destination);
+			$relativePath = $destination . $this->createName($fileUpload);
 			$pathname = $this->documentRoot->createAbsolutePath($relativePath);
 		} while (is_file($pathname));
 
@@ -39,16 +41,12 @@ class Upload
 	/**
 	 * Prepare file name for save to file system.
 	 * @param Http\FileUpload $fileUpload
-	 * @param string $destination
 	 * @return string
 	 */
-	protected function createName(Http\FileUpload $fileUpload, $destination)
+	protected function createName(Http\FileUpload $fileUpload)
 	{
 		$ext = pathinfo($fileUpload->getName(), PATHINFO_EXTENSION);
-		if ($destination) {
-			$destination = trim($destination, '\/') . DIRECTORY_SEPARATOR;
-		}
-		return $destination . sha1(microtime(TRUE) . '.' . $fileUpload->getName()) . '.' . $ext;
+		return sha1(microtime(TRUE) . '.' . $fileUpload->getName()) . '.' . $ext;
 	}
 
 }
