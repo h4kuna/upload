@@ -19,12 +19,13 @@ class Upload
 	 * Output path save to databese.
 	 * @param Http\FileUpload $fileUpload
 	 * @param string $destination
-	 * @return string|NULL
+	 * @throws FileUploadFaildException
+	 * @return string
 	 */
 	public function save(Http\FileUpload $fileUpload, $destination = '')
 	{
 		if (!$fileUpload->isOk()) {
-			return NULL;
+			throw new FileUploadFaildException($fileUpload->getName(), $fileUpload->getError());
 		} elseif ($destination) {
 			$destination = trim($destination, '\/') . DIRECTORY_SEPARATOR;
 		}

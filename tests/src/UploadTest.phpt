@@ -54,11 +54,13 @@ class UploadTest extends \Tester\TestCase
 		Assert::true(is_file($absolutePath));
 	}
 
+	/**
+	 * @throws h4kuna\Upload\FileUploadFaildException
+	 */
 	public function testUploadFail()
 	{
 		$uploadFile = $this->fileUploadFactory->create('čivava.txt', 1);
-		$relativePath = $this->upload->save($uploadFile);
-		Assert::null($relativePath);
+		$this->upload->save($uploadFile);
 	}
 
 }

@@ -35,12 +35,12 @@ Inject Upload class to your class and use it.
 $upload = $container->getService('uploadExtension.upload');
 
 
-/* @var $file Nette\Http\FileUpload */
-$relativeDir = $upload->save($file);
-// or
-$relativeDir = $upload->save($file, 'subdir/by/id');
+try {
+	/* @var $file Nette\Http\FileUpload */
+	$relativeDir = $upload->save($file);
+	// or
+	$relativeDir = $upload->save($file, 'subdir/by/id');
 
-if($relativeDir !== NULL) {
 	// example how to save to database data for IStoreFile
 	$fileTable->insert([
 		'name' => $uploadFile->getName(),
@@ -49,7 +49,7 @@ if($relativeDir !== NULL) {
 		// optional
 		'size' => $uploadFile->getSize(),
 	]);
-} else {
+} catch (\h4kuna\Upload\FileUploadFaildException $e) {
 	// upload is faild
 }
 ```

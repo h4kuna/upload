@@ -19,7 +19,8 @@
 	"autoload": {
 		"psr-4": {
 			"h4kuna\\Upload\\": "src/"
-		}
+		},
+		"files": ["src/exceptions.php"]
 	},
 	"require-dev": {
 		"salamium/testinium": "dev-master"
