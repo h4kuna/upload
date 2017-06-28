@@ -37,16 +37,15 @@ class FileResponseFactory
 	/**
 	 * @param IStoreFile $file
 	 * @param bool $forceDownload
-	 * @return bool
+	 * @throws FileDownloadFaildException
 	 */
 	public function send(IStoreFile $file, $forceDownload = TRUE)
 	{
 		try {
 			$this->create($file, $forceDownload)->send($this->request, $this->response);
 		} catch (Application\BadRequestException $e) {
-			return FALSE;
+			throw new FileDownloadFaildException($e->getMessage(), NULL, $e);
 		}
-		return TRUE;
 	}
 
 }

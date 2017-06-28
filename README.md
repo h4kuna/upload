@@ -69,7 +69,10 @@ $presenter->sendResponse($fileResponseFactory->create($file));
 Or if you use own script
 ```php
 $file = new File(...); // instance of IStoreFile
-if($fileResponseFactory->send($file) === FALSE) {
+
+try {
+	$fileResponseFactory->send($file);
+} catch (\h4kuna\Upload\FileDownloadFaildException $e) {
 	$response->setCode(Nette\Http\IResponse::S404_NOT_FOUND);
 }
 exit;
