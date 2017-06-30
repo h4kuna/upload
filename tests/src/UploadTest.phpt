@@ -30,8 +30,6 @@ class UploadTest extends \Tester\TestCase
 		$uploadFile = $this->fileUploadFactory->create('čivava.txt');
 		$relativePath = $this->upload->save($uploadFile);
 
-		Assert::notSame(NULL, $relativePath);
-
 		$absolutePath = $this->documentRoot->createAbsolutePath($relativePath);
 		Assert::true(is_file($absolutePath));
 
@@ -48,8 +46,6 @@ class UploadTest extends \Tester\TestCase
 		$uploadFile = $this->fileUploadFactory->create('čivava.txt');
 		$relativePath = $this->upload->save($uploadFile, 'my/path/is/here');
 
-		Assert::notSame(NULL, $relativePath);
-
 		$absolutePath = $this->documentRoot->createAbsolutePath($relativePath);
 		Assert::true(is_file($absolutePath));
 	}
@@ -61,6 +57,15 @@ class UploadTest extends \Tester\TestCase
 	{
 		$uploadFile = $this->fileUploadFactory->create('čivava.txt', 1);
 		$this->upload->save($uploadFile);
+	}
+
+	public function testPrivate()
+	{
+		$uploadFile = $this->fileUploadFactory->create('čivava.txt');
+		$relativePath = $this->upload->save($uploadFile, '', 'private');
+
+		$absolutePath = $this->documentRoot->createAbsolutePath($relativePath, 'private');
+		Assert::true(is_file($absolutePath));
 	}
 
 }

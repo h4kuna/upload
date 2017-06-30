@@ -7,14 +7,18 @@ use Nette\DI\CompilerExtension;
 class UploadExtension extends CompilerExtension
 {
 
-	public $defaults = [
+	private $defaults = [
 		'destinationDir' => '%wwwDir%/upload'
 	];
 
 	public function loadConfiguration()
 	{
 		$builder = $this->getContainerBuilder();
-		$config = $this->getConfig($this->defaults);
+		$config = $this->validateConfig($this->defaults);
+
+		if (!is_array($config['destinationDir'])) {
+			$config['destinationDir'] = [$config['destinationDir']];
+		}
 
 		self::checkDestinationDir($config['destinationDir']);
 
@@ -30,14 +34,16 @@ class UploadExtension extends CompilerExtension
 			->setClass('h4kuna\Upload\Upload');
 	}
 
-	static private function checkDestinationDir($destinationDir)
+	static private function checkDestinationDir(array $destinationDirs)
 	{
-		if (!is_dir($destinationDir)) {
-			throw new \RuntimeException('Writeable directory not found: ' . $destinationDir);
-		}
+		foreach ($destinationDirs as $destinationDir) {
+			if (!is_dir($destinationDir)) {
+				throw new \RuntimeException('Writeable directory not found: ' . $destinationDir);
+			}
 
-		if (!is_writable($destinationDir)) {
-			throw new \RuntimeException('Set writeable permision for: ' . $destinationDir);
+			if (!is_writable($destinationDir)) {
+				throw new \RuntimeException('Set writeable permision for: ' . $destinationDir);
+			}
 		}
 	}
 

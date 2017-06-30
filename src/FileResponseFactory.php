@@ -27,22 +27,26 @@ class FileResponseFactory
 	/**
 	 * @param IStoreFile $file
 	 * @param bool $forceDownload
+	 * @param string|NULL $destinationAlias
 	 * @return Application\Responses\FileResponse
 	 */
-	public function create(IStoreFile $file, $forceDownload = TRUE)
+	public function create(IStoreFile $file, $forceDownload = TRUE, $destinationAlias = NULL)
 	{
-		return new Application\Responses\FileResponse($this->documentRoot->createAbsolutePath($file), $file->getName(), $file->getContentType(), $forceDownload);
+		return new Application\Responses\FileResponse(
+			$this->documentRoot->createAbsolutePath($file, $destinationAlias),
+			$file->getName(), $file->getContentType(), $forceDownload);
 	}
 
 	/**
 	 * @param IStoreFile $file
 	 * @param bool $forceDownload
+	 * @param string|NULL $destinationAlias
 	 * @throws FileDownloadFaildException
 	 */
-	public function send(IStoreFile $file, $forceDownload = TRUE)
+	public function send(IStoreFile $file, $forceDownload = TRUE, $destinationAlias = NULL)
 	{
 		try {
-			$this->create($file, $forceDownload)->send($this->request, $this->response);
+			$this->create($file, $forceDownload, $destinationAlias)->send($this->request, $this->response);
 		} catch (Application\BadRequestException $e) {
 			throw new FileDownloadFaildException($e->getMessage(), NULL, $e);
 		}

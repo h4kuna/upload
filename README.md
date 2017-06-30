@@ -27,6 +27,11 @@ extensions:
 # optional
 uploadExtension:
 	destinationDir: %wwwDir%/upload # this is default, you must create like writeable
+
+	# or destinationDir can by array
+	destinationDir:
+		pulic: %wwwDir%/upload # first is default
+		private: %appDir%/private
 ```
 
 Inject Upload class to your class and use it.
@@ -54,6 +59,19 @@ try {
 }
 ```
 
+If you want save to other destination file what is defined above.
+
+```php
+try {
+	/* @var $file Nette\Http\FileUpload */
+	$relativeDir = $upload->save($file, 'subdir/by/id', 'private');
+
+	// ...
+} catch (\h4kuna\Upload\FileUploadFaildException $e) {
+	// upload is faild
+}
+```
+
 Now create FileResponse for download file.
 ```php
 /* @var $fileResponseFactory h4kuna\Upload\FileResponseFactory */
@@ -66,6 +84,13 @@ If you use in presenter
 $file = new File(...); // instance of IStoreFile
 $presenter->sendResponse($fileResponseFactory->create($file));
 ```
+
+Change destination:
+```php
+// second parameter is force download
+$presenter->sendResponse($fileResponseFactory->create($file, FALSE, 'private'));
+```
+
 Or if you use own script
 ```php
 $file = new File(...); // instance of IStoreFile

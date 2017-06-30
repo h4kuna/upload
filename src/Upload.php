@@ -18,21 +18,22 @@ class Upload
 	/**
 	 * Output path save to databese.
 	 * @param Http\FileUpload $fileUpload
-	 * @param string $destination
+	 * @param string $path
+	 * @param string|NULL $destinationAlias
 	 * @throws FileUploadFaildException
 	 * @return string
 	 */
-	public function save(Http\FileUpload $fileUpload, $destination = '')
+	public function save(Http\FileUpload $fileUpload, $path = '', $destinationAlias = NULL)
 	{
 		if (!$fileUpload->isOk()) {
 			throw new FileUploadFaildException($fileUpload->getName(), $fileUpload->getError());
-		} elseif ($destination) {
-			$destination = trim($destination, '\/') . DIRECTORY_SEPARATOR;
+		} elseif ($path) {
+			$path = trim($path, '\/') . DIRECTORY_SEPARATOR;
 		}
 
 		do {
-			$relativePath = $destination . $this->createName($fileUpload);
-			$pathname = $this->documentRoot->createAbsolutePath($relativePath);
+			$relativePath = $path . $this->createName($fileUpload);
+			$pathname = $this->documentRoot->createAbsolutePath($relativePath, $destinationAlias);
 		} while (is_file($pathname));
 
 		$fileUpload->move($pathname);

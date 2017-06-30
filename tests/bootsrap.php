@@ -21,6 +21,7 @@ if (is_file($local)) {
 Tracy\Debugger::enable(FALSE);
 
 @mkdir($tmp . '/upload');
+@mkdir($tmp . '/private');
 
 $container = $configurator->createContainer();
 

@@ -11,4 +11,6 @@ extensions:
     uploadExtension: h4kuna\Upload\DI\UploadExtension
 
 uploadExtension:
-	destinationDir: %tempDir%/upload
+	destinationDir:
+		public: %tempDir%/upload
+		private: %tempDir%/private
