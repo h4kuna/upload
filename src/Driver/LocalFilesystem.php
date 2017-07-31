@@ -22,10 +22,7 @@ class LocalFilesystem implements Upload\IDriver
 
 	public function createURI($relativePath)
 	{
-		if ($relativePath instanceof Upload\IStoreFile) {
-			$relativePath = $relativePath->getRelativePath();
-		}
-		return $this->destinationDir . DIRECTORY_SEPARATOR . $relativePath;
+		return $this->destinationDir . DIRECTORY_SEPARATOR . Upload\Utils::makeRelativePath($relativePath);
 	}
 
 	public function isFileExists($relativePath)

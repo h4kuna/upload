@@ -4,15 +4,36 @@ php:
 application:
 	scanDirs: false
 
+parameters:
+    ftp:
+        host:
+        port:
+        user:
+        password:
+        path:
+        url:
+        passive:
+
 services:
-	- Salamium\Testinium\FileUploadFactory(%tempDir%)
-	noUse: h4kuna\Upload\MyFileLocale(%tempDir%)
+    - Salamium\Testinium\FileUploadFactory(%tempDir%)
+    noUse: h4kuna\Upload\MyFileLocale(%tempDir%)
 
 extensions:
     uploadExtension: h4kuna\Upload\DI\UploadExtension
 
 uploadExtension:
-	destinations:
-		public: %tempDir%/upload
-		private: %tempDir%/private
-		noUse: @noUse
+    ftp:
+        test:
+            host: %ftp.host%
+            user: %ftp.user%
+            password: %ftp.password%
+            url: %ftp.url%
+            # optional
+            path: %ftp.path%
+            port: %ftp.port%
+            passive: %ftp.passive%
+
+    destinations:
+        public: %tempDir%/upload
+        private: %tempDir%/private
+        noUse: @noUse

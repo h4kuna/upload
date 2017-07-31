@@ -2,6 +2,7 @@ Upload
 ==========
 [![Build Status](https://travis-ci.org/h4kuna/upload.svg?branch=master)](https://travis-ci.org/h4kuna/upload)
 [![Downloads this Month](https://img.shields.io/packagist/dm/h4kuna/upload.svg)](https://packagist.org/packages/h4kuna/upload)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/h4kuna/upload/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/h4kuna/upload/?branch=master)
 [![Latest stable](https://img.shields.io/packagist/v/h4kuna/upload.svg)](https://packagist.org/packages/h4kuna/upload)
 [![Coverage Status](https://coveralls.io/repos/github/h4kuna/upload/badge.svg?branch=master)](https://coveralls.io/github/h4kuna/upload?branch=master)
 
@@ -93,16 +94,37 @@ try {
 exit;
 ```
 
+Ftp
+----
+Ftp client is [dg/ftp-php](//github.com/dg/ftp-php) but not contained in this composer. Wrapper is [Ftp](src/Driver/Ftp.php).
+```neon
+uploadExtension:
+    ftp:
+        test:
+            host: example.com
+            user: root
+            password: 123456
+            url: http://example.com/images
+            # optional
+            path: images
+            port: 21
+            passive: true
+```
+This create services
+- **uploadExtension.ftp.test** client \Ftp
+- **uploadExtension.driver.test** IDriver
+- **uploadExtension.upload.test** Upload with this driver
+- **uploadExtension.download.test** Download with this driver
+
 Own Driver service
 -----------
-This library save files only on filesystem. But you need save to remote server like ftp or ssh. For this moment is not implemented, but it is prepared. Let's inspire on [LocalFilesystem](src/Driver/LocalFilesystem.php) 
-
+This library save files only on filesystem and ftp. If you need to save on remote server via ssh etc. For this moment is not implemented, but it is prepared. Let's inspire on [LocalFilesystem](src/Driver/LocalFilesystem.php) 
 
 - Create your own class with [IDriver](src/IDriver.php) interface
 ```php
 <?php
 
-class FtpDriver implements \h4kuna\Upload\IDriver
+class SshDriver implements \h4kuna\Upload\IDriver
 {
 // your implementation
 } 
@@ -110,13 +132,13 @@ class FtpDriver implements \h4kuna\Upload\IDriver
 - Register in neon if you need
 ```neon
 services:
-    myFtpDriver: FtpDriver
+    mySshDriver: SshDriver
     
-    uploadComponent: UploadControl(@uploadExtension.upload.myFtpDriver)
-    reponseComponent: DownloadControl(@uploadExtension.download.myFtpDriver)
+    uploadComponent: UploadControl(@uploadExtension.upload.sshDriver)
+    reponseComponent: DownloadControl(@uploadExtension.download.sshDriver)
     
 uploadExtension:
 	destinations:
 		public: %wwwDir%/upload # first is default  
-		myFtpDriver: @myFtpDriver  
+		sshDriver: @mySshDriver  
 ```

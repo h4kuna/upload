@@ -1,6 +1,6 @@
 /nbproject/
 /.idea/
-/vendor/
+/**/vendor/
 /tests/temp/
 *.local.neon
 composer.lock
