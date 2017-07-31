@@ -2,49 +2,44 @@
 
 namespace h4kuna\Upload\DI;
 
-use Nette\DI\CompilerExtension;
+use Nette\DI;
 
-class UploadExtension extends CompilerExtension
+class UploadExtension extends DI\CompilerExtension
 {
-
 	private $defaults = [
-		'destinationDir' => '%wwwDir%/upload'
+		'destinations' => '%wwwDir%/upload',
 	];
 
 	public function loadConfiguration()
 	{
+		$this->config += $this->defaults;
 		$builder = $this->getContainerBuilder();
-		$config = $this->validateConfig($this->defaults);
-
-		if (!is_array($config['destinationDir'])) {
-			$config['destinationDir'] = [$config['destinationDir']];
+		$config = DI\Helpers::expand($this->config, $builder->parameters);
+		if (!is_array($config['destinations'])) {
+			$config['destinations'] = ['default' => $config['destinations']];
 		}
 
-		self::checkDestinationDir($config['destinationDir']);
-
-		// DocumentRoot
-		$builder->addDefinition($this->prefix('documentRoot'))
-			->setClass('h4kuna\Upload\DocumentRoot', [$config['destinationDir']]);
-
-		// FileResponseFactory
-		$builder->addDefinition($this->prefix('fileResponseFactory'))
-			->setClass('h4kuna\Upload\FileResponseFactory');
-
-		$builder->addDefinition($this->prefix('upload'))
-			->setClass('h4kuna\Upload\Upload');
-	}
-
-	static private function checkDestinationDir(array $destinationDirs)
-	{
-		foreach ($destinationDirs as $destinationDir) {
-			if (!is_dir($destinationDir)) {
-				throw new \RuntimeException('Writeable directory not found: ' . $destinationDir);
+		$autowired = true;
+		foreach ($config['destinations'] as $i => $destination) {
+			if (is_dir($destination)) {
+				$definition = $builder->addDefinition($this->prefix('driver.' . $i))
+					->setClass('h4kuna\Upload\Driver\LocalFilesystem', [$destination])
+					->setAutowired($autowired);
+			} else {
+				$definition = $destination;
 			}
 
-			if (!is_writable($destinationDir)) {
-				throw new \RuntimeException('Set writeable permision for: ' . $destinationDir);
-			}
+			// Download
+			$builder->addDefinition($this->prefix('download.' . $i))
+				->setClass('h4kuna\Upload\Download', [$definition, '@http.request', '@http.response'])
+				->setAutowired($autowired);
+
+			// Upload
+			$builder->addDefinition($this->prefix('upload.' . $i))
+				->setClass('h4kuna\Upload\Upload', [$definition])
+				->setAutowired($autowired);
+
+			$autowired = false;
 		}
 	}
-
 }

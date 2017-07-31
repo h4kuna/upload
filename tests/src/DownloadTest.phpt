@@ -2,28 +2,9 @@
 
 namespace h4kuna\Upload;
 
+use Tester\Assert;
+
 $container = require __DIR__ . '/../bootsrap.php';
-
-class DownloadTest extends \Tester\TestCase
-{
-
-	/** @var FileResponseFactory */
-	private $fileResponseFactory;
-
-	public function __construct(FileResponseFactory $fileResponseFactory)
-	{
-		$this->fileResponseFactory = $fileResponseFactory;
-	}
-
-	/**
-	 * @throws h4kuna\Upload\FileDownloadFaildException
-	 */
-	public function testUploadFaild()
-	{
-		$this->fileResponseFactory->send(new TestFile());
-	}
-
-}
 
 class TestFile implements IStoreFile
 {
@@ -45,6 +26,10 @@ class TestFile implements IStoreFile
 
 }
 
-$fileResponseFactory = $container->getService('uploadExtension.fileResponseFactory');
+/** @var Download $download */
+$download = $container->getService('uploadExtension.download.public');
 
-(new DownloadTest($fileResponseFactory))->run();
+Assert::exception(function() use ($download) {
+	$download->send(new TestFile());
+}, 'h4kuna\Upload\FileDownloadFailedException');
+

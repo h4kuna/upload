@@ -6,11 +6,13 @@ application:
 
 services:
 	- Salamium\Testinium\FileUploadFactory(%tempDir%)
+	noUse: h4kuna\Upload\MyFileLocale(%tempDir%)
 
 extensions:
     uploadExtension: h4kuna\Upload\DI\UploadExtension
 
 uploadExtension:
-	destinationDir:
+	destinations:
 		public: %tempDir%/upload
 		private: %tempDir%/private
+		noUse: @noUse

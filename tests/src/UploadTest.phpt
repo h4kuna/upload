@@ -2,76 +2,47 @@
 
 namespace h4kuna\Upload;
 
-use Tester\Assert;
+
+use Nette\Utils,
+	Tester\Assert;
 
 $container = require __DIR__ . '/../bootsrap.php';
-
-class UploadTest extends \Tester\TestCase
-{
-
-	/** @var Upload */
-	private $upload;
-
-	/** @var DocumentRoot */
-	private $documentRoot;
-
-	/** @var \Salamium\Testinium\FileUploadFactory */
-	private $fileUploadFactory;
-
-	public function __construct(Upload $upload, DocumentRoot $documentRoot, \Salamium\Testinium\FileUploadFactory $fileUploadFactory)
-	{
-		$this->upload = $upload;
-		$this->documentRoot = $documentRoot;
-		$this->fileUploadFactory = $fileUploadFactory;
-	}
-
-	public function testUpload()
-	{
-		$uploadFile = $this->fileUploadFactory->create('čivava.txt');
-		$relativePath = $this->upload->save($uploadFile);
-
-		$absolutePath = $this->documentRoot->createAbsolutePath($relativePath);
-		Assert::true(is_file($absolutePath));
-
-//		$this->fileRepository->insert([
-//			'name' => $uploadFile->getName(),
-//			'size' => $uploadFile->getSize(),
-//			'filesystem' => $relativePath,
-//			'type' => $uploadFile->getContentType(),
-//		]);
-	}
-
-	public function testUploadSubDir()
-	{
-		$uploadFile = $this->fileUploadFactory->create('čivava.txt');
-		$relativePath = $this->upload->save($uploadFile, 'my/path/is/here');
-
-		$absolutePath = $this->documentRoot->createAbsolutePath($relativePath);
-		Assert::true(is_file($absolutePath));
-	}
-
-	/**
-	 * @throws h4kuna\Upload\FileUploadFaildException
-	 */
-	public function testUploadFail()
-	{
-		$uploadFile = $this->fileUploadFactory->create('čivava.txt', 1);
-		$this->upload->save($uploadFile);
-	}
-
-	public function testPrivate()
-	{
-		$uploadFile = $this->fileUploadFactory->create('čivava.txt');
-		$relativePath = $this->upload->save($uploadFile, '', 'private');
-
-		$absolutePath = $this->documentRoot->createAbsolutePath($relativePath, 'private');
-		Assert::true(is_file($absolutePath));
-	}
-
-}
-
-$upload = $container->getService('uploadExtension.upload');
-$documentRoot = $container->getService('uploadExtension.documentRoot');
+/* @var $fileUploadFactory \Salamium\Testinium\FileUploadFactory */
 $fileUploadFactory = $container->getByType('Salamium\Testinium\FileUploadFactory');
 
-(new UploadTest($upload, $documentRoot, $fileUploadFactory))->run();
+$tempDir = __DIR__ . '/../temp/upload';
+Utils\FileSystem::createDir($tempDir);
+
+
+// save file
+$driver = new Driver\LocalFilesystem($tempDir);
+$upload = new Upload($driver);
+$relativePath = $upload->save($fileUploadFactory->create('čivava.txt'));
+
+$absolutePath = $driver->createURI($relativePath);
+Assert::true(is_file($absolutePath));
+
+
+// save file to sub directory
+$uploadFile = $fileUploadFactory->create('čivava.txt');
+$relativePath = $upload->save($uploadFile, 'my/path/is/here');
+
+$absolutePath = $driver->createURI($relativePath);
+Assert::true(is_file($absolutePath));
+
+
+// upload failed
+Assert::exception(function() use ($upload, $fileUploadFactory) {
+	$upload->save($fileUploadFactory->create('čivava.txt', UPLOAD_ERR_NO_FILE));
+}, 'h4kuna\Upload\FileUploadFailedException');
+
+// upload custom driver
+/* @var $upload Upload */
+$upload = $container->getService('uploadExtension.upload.noUse');
+$uploadFile = $fileUploadFactory->create('čivava.txt');
+$relative = $upload->save($uploadFile);
+Assert::same('civava.txt', $relative);
+
+$driver = $container->getService('noUse');
+Assert::true($driver->remove($relative));
+

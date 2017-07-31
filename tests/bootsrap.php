@@ -1,6 +1,7 @@
 <?php
 
 include __DIR__ . '/../vendor/autoload.php';
+include __DIR__ . '/config/MyFileLocale.php';
 
 Tester\Environment::setup();
 

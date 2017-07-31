@@ -6,49 +6,50 @@ use Nette\Http;
 
 class Upload
 {
+	/** @var IDriver */
+	private $driver;
 
-	/** @var DocumentRoot */
-	private $documentRoot;
-
-	public function __construct(DocumentRoot $documentRoot)
+	public function __construct(IDriver $driver)
 	{
-		$this->documentRoot = $documentRoot;
+		$this->driver = $driver;
 	}
 
 	/**
-	 * Output path save to databese.
+	 * Output path save to database.
 	 * @param Http\FileUpload $fileUpload
 	 * @param string $path
-	 * @param string|NULL $destinationAlias
-	 * @throws FileUploadFaildException
 	 * @return string
+	 *
+	 * @throws FileUploadFailedException
 	 */
-	public function save(Http\FileUpload $fileUpload, $path = '', $destinationAlias = NULL)
+	public function save(Http\FileUpload $fileUpload, $path = '')
 	{
 		if (!$fileUpload->isOk()) {
-			throw new FileUploadFaildException($fileUpload->getName(), $fileUpload->getError());
+			throw new FileUploadFailedException($fileUpload->getName(), $fileUpload->getError());
 		} elseif ($path) {
 			$path = trim($path, '\/') . DIRECTORY_SEPARATOR;
 		}
 
 		do {
-			$relativePath = $path . $this->createName($fileUpload);
-			$pathname = $this->documentRoot->createAbsolutePath($relativePath, $destinationAlias);
-		} while (is_file($pathname));
+			$relativePath = $path . $this->createUniqueName($fileUpload);
+		} while ($this->driver->isFileExists($relativePath));
 
-		$fileUpload->move($pathname);
+		$this->driver->save($fileUpload, $relativePath);
+
 		return $relativePath;
 	}
 
 	/**
-	 * Prepare file name for save to file system.
 	 * @param Http\FileUpload $fileUpload
 	 * @return string
 	 */
-	protected function createName(Http\FileUpload $fileUpload)
+	private function createUniqueName(Http\FileUpload $fileUpload)
 	{
+		$fileName = $this->driver->createName($fileUpload);
+		if ($fileName !== NULL && is_string($fileName)) {
+			return $fileName;
+		}
 		$ext = pathinfo($fileUpload->getName(), PATHINFO_EXTENSION);
 		return sha1(microtime(TRUE) . '.' . $fileUpload->getName()) . '.' . $ext;
 	}
-
 }
