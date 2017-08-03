@@ -2,7 +2,8 @@
 
 namespace h4kuna\Upload;
 
-use Nette\Http;
+use h4kuna\Upload\Store,
+	Nette\Http;
 
 class Upload
 {
@@ -18,11 +19,12 @@ class Upload
 	 * Output path save to database.
 	 * @param Http\FileUpload $fileUpload
 	 * @param string $path
-	 * @return string
+	 * @param callable|NULL $extendStoredFile
+	 * @return Store\File
 	 *
 	 * @throws FileUploadFailedException
 	 */
-	public function save(Http\FileUpload $fileUpload, $path = '')
+	public function save(Http\FileUpload $fileUpload, $path = '', callable $extendStoredFile = NULL)
 	{
 		if (!$fileUpload->isOk()) {
 			throw new FileUploadFailedException($fileUpload->getName(), $fileUpload->getError());
@@ -34,9 +36,15 @@ class Upload
 			$relativePath = $path . $this->createUniqueName($fileUpload);
 		} while ($this->driver->isFileExists($relativePath));
 
+		$storeFile = new Store\File($relativePath, $fileUpload->getName(), $fileUpload->getContentType());
+
+		if($extendStoredFile !== NULL) {
+			$extendStoredFile($storeFile, $fileUpload);
+		}
+
 		$this->driver->save($fileUpload, $relativePath);
 
-		return $relativePath;
+		return $storeFile;
 	}
 
 	/**
@@ -46,10 +54,11 @@ class Upload
 	private function createUniqueName(Http\FileUpload $fileUpload)
 	{
 		$fileName = $this->driver->createName($fileUpload);
-		if ($fileName !== NULL && is_string($fileName)) {
+		if ($fileName !== null && is_string($fileName)) {
 			return $fileName;
 		}
 		$ext = pathinfo($fileUpload->getName(), PATHINFO_EXTENSION);
-		return sha1(microtime(TRUE) . '.' . $fileUpload->getName()) . '.' . $ext;
+
+		return sha1(microtime(true) . '.' . $fileUpload->getName()) . '.' . $ext;
 	}
 }

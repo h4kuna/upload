@@ -47,27 +47,33 @@ services:
 
  
 
-Inject Upload service to your class and use it.
+Inject Upload service to your class and use it. Return an object **h4kuna\Upload\Store\File** let's save all property for later create **IStoreFile**.
 ```php
 /* @var $upload h4kuna\Upload\Upload */
 
 
 try {
 	/* @var $file Nette\Http\FileUpload */
-	$relativeDir = $upload->save($file);
+	/* @var $storedFile h4kuna\Upload\Store\File */
+	$storedFile = $upload->save($file);
 	// or
-	$relativeDir = $upload->save($file, 'subdir/by/id');
+	$storedFile = $upload->save($file, 'subdir/by/id', function(h4kuna\Upload\Store\File $storedFile, Nette\Http\FileUpload $uploadFile) {
+	    // if you need add optional property like size, etc. 
+	    $storedFile->isImage = $uploadFile->isImage();
+	});
 
 	// example how to save to database data for IStoreFile
 	$fileTable->insert([
-		'name' => $uploadFile->getName(),
-		'filesystem' => $relativePath,
-		'type' => $uploadFile->getContentType(),
+		'name' => $storedFile->getName(),
+		'filesystem' => $storedFile->getRelativePath(),
+		'type' => $storedFile->getContentType(),
+		
 		// optional
-		'size' => $uploadFile->getSize(),
+		'size' => $file->getSize(),
+		'is_image' => $storedFile->isImage
 	]);
 } catch (\h4kuna\Upload\FileUploadFailedException $e) {
-	// upload is faild
+	// upload is failed
 }
 ```
 
