@@ -41,7 +41,9 @@ Assert::true(is_file($absolutePath));
 
 // upload failed
 Assert::exception(function () use ($upload, $fileUploadFactory) {
-	$upload->save($fileUploadFactory->create('čivava.txt', UPLOAD_ERR_NO_FILE));
+	$upload->save($fileUploadFactory->create('čivava.txt', UPLOAD_ERR_NO_FILE), NULL, function(Store\File $file, Http\FileUpload $uploadFile) {
+		return $uploadFile->isOk();
+	});
 }, 'h4kuna\Upload\FileUploadFailedException');
 
 // upload custom driver

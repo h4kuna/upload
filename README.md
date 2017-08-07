@@ -19,13 +19,22 @@ The best way to install h4kuna/upload is using composer:
 $ composer require h4kuna/upload
 ```
 
-How to use
+For begin
 -----------
-Register extension for Nette in neon config file.
+Simple registration like extension
 ```neon
 extensions:
     uploadExtension: h4kuna\Upload\DI\UploadExtension
+```
+You need create writeable dir **%wwwDir%/upload** and use new services.
+- **uploadExtension.driver.default** object LocalFilesystem
+- **uploadExtension.upload.default** object Upload with this driver
+- **uploadExtension.download.default** object Download with this driver
 
+More options
+-----------
+Register extension for Nette in neon config file.
+```neon
 # optional
 uploadExtension:
 	destinations: %wwwDir%/upload # this is default, you must create like writeable
@@ -60,6 +69,15 @@ try {
 	$storedFile = $upload->save($file, 'subdir/by/id', function(h4kuna\Upload\Store\File $storedFile, Nette\Http\FileUpload $uploadFile) {
 	    // if you need add optional property like size, etc. 
 	    $storedFile->isImage = $uploadFile->isImage();
+	    
+	    // Custom rule: allow image bigger then 500x500px
+	    if ($storedFile->isImage) {
+	        $image = $uploadFile->getImage();
+	        if($image->getHeight() < 500 || $image->getWidth() < 500) {
+	            return false; // this return throw exception
+	        }
+	    }
+	    
 	});
 
 	// example how to save to database data for IStoreFile

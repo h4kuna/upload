@@ -16,19 +16,20 @@ class Upload
 	}
 
 	/**
-	 * Output path save to database.
+	 * Output object save to database.
+	 * Don't forget use nette rule Form::MIME_TYPE and Form::IMAGE.
+	 * $fileUpload->isOk() nette call automaticaly.
+	 *
 	 * @param Http\FileUpload $fileUpload
 	 * @param string $path
-	 * @param callable|NULL $extendStoredFile
+	 * @param callable|NULL $extendStoredFile - If you need special rules then return false if is not valid.
 	 * @return Store\File
 	 *
 	 * @throws FileUploadFailedException
 	 */
-	public function save(Http\FileUpload $fileUpload, $path = '', callable $extendStoredFile = NULL)
+	public function save(Http\FileUpload $fileUpload, $path = '', callable $extendStoredFile = null)
 	{
-		if (!$fileUpload->isOk()) {
-			throw new FileUploadFailedException($fileUpload->getName(), $fileUpload->getError());
-		} elseif ($path) {
+		if ($path) {
 			$path = trim($path, '\/') . DIRECTORY_SEPARATOR;
 		}
 
@@ -38,8 +39,8 @@ class Upload
 
 		$storeFile = new Store\File($relativePath, $fileUpload->getName(), $fileUpload->getContentType());
 
-		if($extendStoredFile !== NULL) {
-			$extendStoredFile($storeFile, $fileUpload);
+		if ($extendStoredFile !== null && $extendStoredFile($storeFile, $fileUpload) === false) {
+			throw new FileUploadFailedException($fileUpload->getName());
 		}
 
 		$this->driver->save($fileUpload, $relativePath);
