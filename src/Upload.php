@@ -43,7 +43,11 @@ class Upload
 			throw new FileUploadFailedException($fileUpload->getName());
 		}
 
-		$this->driver->save($fileUpload, $relativePath);
+		try {
+			$this->driver->save($fileUpload, $relativePath);
+		} catch (\Exception $e) {
+			throw new FileUploadFailedException('Driver "' . get_class($this->driver) . '" failed.', null, $e);
+		}
 
 		return $storeFile;
 	}
