@@ -26,6 +26,7 @@
 		"dg/ftp-php": "to save on remote server via ftp h4kuna\\Upload\\Driver\\Ftp"
 	},
 	"require-dev": {
-		"salamium/testinium": "dev-master"
+		"salamium/testinium": "^0.1.2",
+		"mockery/mockery": "^0.9.9"
 	}
 }

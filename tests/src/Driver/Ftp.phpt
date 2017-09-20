@@ -3,39 +3,45 @@
 namespace h4kuna\Upload\Driver;
 
 use h4kuna\Upload\Upload,
-	Tester\Assert,
-	Tester\Environment;
+	Tester\Assert;
 
 exec('composer install');
 require __DIR__ . '/vendor/autoload.php';
 
 $container = require __DIR__ . '/../../bootsrap.php';
 
-if (!is_file(__DIR__ . '/../../config/test.ftp.local.neon')) {
-	Environment::skip('No ftp connection.');
+if (is_file(__DIR__ . '/../../config/test.ftp.local.neon')) {
+	$ftpDriver = $container->getService('uploadExtension.driver.test');
+} else {
+	$ftp = \Mockery::mock('Ftp');
+	$ftp->shouldReceive('put');
+	$ftp->shouldReceive('delete');
+	$ftp->shouldReceive('mkDirRecursive');
+	$ftp->shouldReceive('fileExists')->andReturn(false, false, true, false);
+
+	$ftpDriver = new Ftp('http://skoleni.stredobod.cz/milan', $ftp);
 }
 
-/* @var $ftp Ftp */
-$ftp = $container->getService('uploadExtension.driver.test');
-$upload = new Upload($ftp);
+/* @var $ftpDriver Ftp */
 
-Assert::same('http://skoleni.stredobod.cz/milan/home.txt', $ftp->createURI('home.txt'));
+$upload = new Upload($ftpDriver);
 
-Assert::false($ftp->isFileExists('home.txt'));
+Assert::same('http://skoleni.stredobod.cz/milan/home.txt', $ftpDriver->createURI('home.txt'));
+
+Assert::false($ftpDriver->isFileExists('home.txt'));
 
 /* @var $fileUploadFactory \Salamium\Testinium\FileUploadFactory */
 $fileUploadFactory = $container->getByType('Salamium\Testinium\FileUploadFactory');
 
-
 $relative1 = $upload->save($fileUploadFactory->create('home.txt'));
-Assert::true($ftp->isFileExists($relative1));
-// die($ftp->createURI($relative1));
-Assert::true($ftp->remove($relative1));
 
+Assert::true($ftpDriver->isFileExists($relative1));
+// die($ftpDriver->createURI($relative1));
+Assert::true($ftpDriver->remove($relative1));
 
 $relative2 = $upload->save($fileUploadFactory->create('home.txt'), 'sub/dir');
-// die($ftp->createURI($relative2));
-Assert::true($ftp->remove($relative2));
+// die($ftpDriver->createURI($relative2));
+Assert::true($ftpDriver->remove($relative2));
 
 
 
