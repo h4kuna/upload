@@ -1,9 +1,6 @@
 <?php
 
 include __DIR__ . '/../vendor/autoload.php';
-include __DIR__ . '/config/MyFileLocale.php';
-
-Tester\Environment::setup();
 
 if (!class_exists('\Ftp')) {
 	class Ftp extends stdClass
@@ -14,12 +11,13 @@ if (!class_exists('\Ftp')) {
 // 2# Create Nette Configurator
 $configurator = new Nette\Configurator;
 
-$tmp = __DIR__ . '/temp';
-@mkdir($tmp);
-$configurator->enableDebugger($tmp);
-$configurator->setTempDirectory($tmp);
-$configurator->setDebugMode(false);
-$configurator->addConfig(__DIR__ . '/config/test.neon');
+define('TEMP_DIR', __DIR__ . '/temp/' . getmypid());
+@mkdir(TEMP_DIR, 0755, true);
+$configurator
+	->setTempDirectory(TEMP_DIR)
+	->setDebugMode(true)
+	->addConfig(__DIR__ . '/config/test.neon')
+	->enableDebugger(TEMP_DIR . '/..');
 
 foreach (['local', 'ftp.local'] as $neon) {
 	$local = __DIR__ . '/config/test.' . $neon . '.neon';
@@ -28,11 +26,11 @@ foreach (['local', 'ftp.local'] as $neon) {
 	}
 }
 
-Tracy\Debugger::enable(false);
-
-@mkdir($tmp . '/upload');
-@mkdir($tmp . '/private');
+@mkdir(TEMP_DIR . '/upload');
+@mkdir(TEMP_DIR . '/private');
 
 $container = $configurator->createContainer();
+
+Tester\Environment::setup();
 
 return $container;

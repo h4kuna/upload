@@ -24,7 +24,7 @@ if (is_file(__DIR__ . '/../../config/test.ftp.local.neon')) {
 
 /* @var $ftpDriver Ftp */
 
-$upload = new Upload($ftpDriver);
+$upload = new Upload('ftp', $ftpDriver, new \h4kuna\Upload\Store\Filename());
 
 Assert::same('http://skoleni.stredobod.cz/milan/home.txt', $ftpDriver->createURI('home.txt'));
 

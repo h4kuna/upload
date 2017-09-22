@@ -7,12 +7,20 @@ use h4kuna\Upload\Store,
 
 class Upload
 {
+	/** @var string */
+	private $name;
+
 	/** @var IDriver */
 	private $driver;
 
-	public function __construct(IDriver $driver)
+	/** @var Store\Filename */
+	private $filename;
+
+	public function __construct($name, IDriver $driver, Store\Filename $filename)
 	{
+		$this->name = $name;
 		$this->driver = $driver;
+		$this->filename = $filename;
 	}
 
 	/**
@@ -34,7 +42,7 @@ class Upload
 		}
 
 		do {
-			$relativePath = $path . $this->createUniqueName($fileUpload);
+			$relativePath = $path . $this->filename->createUniqueName($fileUpload, $this->name);
 		} while ($this->driver->isFileExists($relativePath));
 
 		$storeFile = new Store\File($relativePath, $fileUpload->getName(), $fileUpload->getContentType());
@@ -50,20 +58,5 @@ class Upload
 		}
 
 		return $storeFile;
-	}
-
-	/**
-	 * @param Http\FileUpload $fileUpload
-	 * @return string
-	 */
-	private function createUniqueName(Http\FileUpload $fileUpload)
-	{
-		$fileName = $this->driver->createName($fileUpload);
-		if ($fileName !== null && is_string($fileName)) {
-			return $fileName;
-		}
-		$ext = pathinfo($fileUpload->getName(), PATHINFO_EXTENSION);
-
-		return sha1(microtime(true) . '.' . $fileUpload->getName()) . '.' . $ext;
 	}
 }

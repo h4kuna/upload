@@ -19,11 +19,6 @@ class Ftp implements Upload\IDriver
 		$this->ftp = $ftp;
 	}
 
-	public function createName(Http\FileUpload $fileUpload)
-	{
-		return null;
-	}
-
 	public function createURI($relativePath)
 	{
 		return $this->hostUrl . '/' . Upload\Utils::makeRelativePath($relativePath);
@@ -38,7 +33,7 @@ class Ftp implements Upload\IDriver
 	{
 		$path = Upload\Utils::makeRelativePath($relativePath);
 		$dir = dirname($relativePath);
-		if($dir !== '.') {
+		if ($dir !== '.') {
 			$this->ftp->mkDirRecursive($dir);
 		}
 		$this->ftp->put($path, $fileUpload->getTemporaryFile(), FTP_BINARY);
@@ -52,6 +47,4 @@ class Ftp implements Upload\IDriver
 
 		return !$this->isFileExists($path);
 	}
-
-
 }

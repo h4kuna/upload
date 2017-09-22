@@ -28,7 +28,7 @@ class Download
 	 * @param bool $forceDownload
 	 * @return Application\Responses\FileResponse
 	 */
-	public function createFileResponse(IStoreFile $file, $forceDownload = TRUE)
+	public function createFileResponse(IStoreFile $file, $forceDownload = true)
 	{
 		return new Application\Responses\FileResponse(
 			$this->driver->createURI($file),
@@ -41,12 +41,12 @@ class Download
 	 *
 	 * @throws FileDownloadFailedException
 	 */
-	public function send(IStoreFile $file, $forceDownload = TRUE)
+	public function send(IStoreFile $file, $forceDownload = true)
 	{
 		try {
 			$this->createFileResponse($file, $forceDownload)->send($this->request, $this->response);
 		} catch (Application\BadRequestException $e) {
-			throw new FileDownloadFailedException($e->getMessage(), NULL, $e);
+			throw new FileDownloadFailedException($e->getMessage(), null, $e);
 		}
 	}
 }

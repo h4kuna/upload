@@ -14,14 +14,19 @@ matrix:
 
 before_script:
   - composer self-update
-  - if [ "$TRAVIS_PHP_VERSION" == "7.1" ]; then NTESTER_FLAGS="phpdbg --coverage ./coverage.xml --coverage-src ./src"; else NTESTER_FLAGS=""; fi
+  - if [ "$TRAVIS_PHP_VERSION" == "7.1" ]; then NTESTER_FLAGS="-p phpdbg --coverage ./coverage.xml --coverage-src ./src"; else NTESTER_FLAGS="-p php"; fi
 
 after_script:
-    - if [ "$TRAVIS_PHP_VERSION" == "7.1" ]; then
-      wget https://github.com/satooshi/php-coveralls/releases/download/v1.0.1/coveralls.phar
-      && php coveralls.phar --verbose --config tests/.coveralls.yml
-      || true;
-      fi
+  - if [ "$TRAVIS_PHP_VERSION" == "7.1" ]; then
+    wget https://github.com/satooshi/php-coveralls/releases/download/v1.0.1/coveralls.phar
+    && php coveralls.phar --verbose --config tests/.coveralls.yml
+    || true;
+    fi
+
+after_failure:
+  # Print *.log content
+  - cat ./tests/temp/exception.log;
 
 script:
-  - ./tests/run-tests $NTESTER_FLAGS
+  - ./tests/run-tests $NTESTER_FLAGS ./tests/src
+  - php ./tests/src/UploadTest.phpt

@@ -7,13 +7,6 @@ use Nette\Http;
 interface IDriver
 {
 	/**
-	 * Method must return unique name for same Http\FileUpload.
-	 * @param Http\FileUpload $fileUpload
-	 * @return string|NULL
-	 */
-	function createName(Http\FileUpload $fileUpload);
-
-	/**
 	 * Return string like absolute path or URL to file.
 	 * This return string will read by fopen function.
 	 * @param IStoreFile|string $relativePath

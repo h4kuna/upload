@@ -30,11 +30,6 @@ class LocalFilesystem implements Upload\IDriver
 		return is_file($this->createURI($relativePath));
 	}
 
-	public function createName(Http\FileUpload $fileUpload)
-	{
-		return NULL;
-	}
-
 	public function remove($relativePath)
 	{
 		return @unlink($this->createURI($relativePath));

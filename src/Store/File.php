@@ -27,10 +27,6 @@ class File implements Upload\IStoreFile
 
 	public function __set($name, $value)
 	{
-		if (isset($this->{$name})) {
-			throw new Upload\InvalidArgumentException('This name "' . $name . '" is reserved.');
-		}
-
 		return $this->extend[$name] = $value;
 	}
 
@@ -39,6 +35,7 @@ class File implements Upload\IStoreFile
 		if (!isset($this->extend[$name])) {
 			throw new Upload\InvalidArgumentException('This name "' . $name . '" does not exists.');
 		}
+
 		return $this->extend[$name];
 	}
 

@@ -38,24 +38,28 @@ class UploadExtension extends DI\CompilerExtension
 		foreach ($config['ftp'] as $name => $options) {
 			$options += $this->ftp;
 			$ftp = $builder->addDefinition($this->prefix('ftp.' . $name))
-				->setClass('Ftp')
+				->setFactory('Ftp')
 				->setAutowired(false)
 				->addSetup('connect', [$options['host'], $options['port']])
 				->addSetup('login', [$options['user'], $options['password']])
 				->addSetup('pasv', [$options['passive']]);
-			if($options['path']) {
+			if ($options['path']) {
 				$ftp->addSetup('chdir', [$options['path']]);
 			}
 
 			$config['destinations'][$name] = $builder->addDefinition($this->prefix('driver.' . $name))
-				->setClass('h4kuna\Upload\Driver\Ftp', [$options['url'], $ftp]);
+				->setFactory('h4kuna\Upload\Driver\Ftp', [$options['url'], $ftp]);
 		}
 
+		// Filename
+		$filename = $builder->addDefinition($this->prefix('filename'))
+			->setFactory('h4kuna\Upload\Store\Filename');
+
 		$autowired = true;
-		foreach ($config['destinations'] as $i => $destination) {
+		foreach ($config['destinations'] as $info => $destination) {
 			if (is_string($destination) && is_dir($destination)) {
-				$definition = $builder->addDefinition($this->prefix('driver.' . $i))
-					->setClass('h4kuna\Upload\Driver\LocalFilesystem', [$destination])
+				$definition = $builder->addDefinition($this->prefix('driver.' . $info))
+					->setFactory('h4kuna\Upload\Driver\LocalFilesystem', [$destination])
 					->setAutowired($autowired);
 			} elseif ($destination instanceof DI\ServiceDefinition) {
 				$definition = $destination->setAutowired($autowired);
@@ -64,13 +68,13 @@ class UploadExtension extends DI\CompilerExtension
 			}
 
 			// Download
-			$builder->addDefinition($this->prefix('download.' . $i))
-				->setClass('h4kuna\Upload\Download', [$definition, '@http.request', '@http.response'])
+			$builder->addDefinition($this->prefix('download.' . $info))
+				->setFactory('h4kuna\Upload\Download', [$definition, '@http.request', '@http.response'])
 				->setAutowired($autowired);
 
 			// Upload
-			$builder->addDefinition($this->prefix('upload.' . $i))
-				->setClass('h4kuna\Upload\Upload', [$definition])
+			$builder->addDefinition($this->prefix('upload.' . $info))
+				->setFactory('h4kuna\Upload\Upload', [$info, $definition, $filename])
 				->setAutowired($autowired);
 
 			$autowired = false;
