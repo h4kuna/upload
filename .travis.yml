@@ -29,4 +29,3 @@ after_failure:
 
 script:
   - ./tests/run-tests $NTESTER_FLAGS ./tests/src
-  - php ./tests/src/UploadTest.phpt

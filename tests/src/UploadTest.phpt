@@ -29,14 +29,19 @@ $storedFile = $upload->save($uploadFile, 'my/path/is/here', function (Store\File
 });
 
 Assert::same('foo', $storedFile->name);
+Assert::same('čivava.txt', $storedFile->getName());
+Assert::same('text/plain', $storedFile->getContentType());
+Assert::contains('my/path/is/here/', (string) $storedFile);
 
 Assert::exception(function () use ($storedFile) {
 	$storedFile->foo;
 }, 'h4kuna\Upload\InvalidArgumentException');
 
 Assert::true($storedFile->size > 0);
-$absolutePath = $driver->createURI($storedFile);
-Assert::true(is_file($absolutePath));
+Assert::true($driver->isFileExists($storedFile));
+
+$driver->remove($storedFile);
+Assert::false($driver->isFileExists($storedFile));
 
 // upload failed
 Assert::exception(function () use ($upload, $fileUploadFactory) {
