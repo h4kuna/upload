@@ -7,11 +7,13 @@ use h4kuna\Upload,
 
 class Ftp implements Upload\IDriver
 {
+
 	/** @var string */
 	private $hostUrl;
 
 	/** @var \Ftp */
 	private $ftp;
+
 
 	public function __construct($hostUrl, \Ftp $ftp)
 	{
@@ -19,15 +21,18 @@ class Ftp implements Upload\IDriver
 		$this->ftp = $ftp;
 	}
 
+
 	public function createURI($relativePath)
 	{
 		return $this->hostUrl . '/' . Upload\Utils::makeRelativePath($relativePath);
 	}
 
+
 	public function isFileExists($relativePath)
 	{
 		return $this->ftp->fileExists(Upload\Utils::makeRelativePath($relativePath));
 	}
+
 
 	public function save(Http\FileUpload $fileUpload, $relativePath)
 	{
@@ -39,6 +44,7 @@ class Ftp implements Upload\IDriver
 		$this->ftp->put($path, $fileUpload->getTemporaryFile(), FTP_BINARY);
 		@unlink($fileUpload->getTemporaryFile());
 	}
+
 
 	public function remove($relativePath)
 	{

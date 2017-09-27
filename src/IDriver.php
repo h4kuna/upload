@@ -6,6 +6,7 @@ use Nette\Http;
 
 interface IDriver
 {
+
 	/**
 	 * Return string like absolute path or URL to file.
 	 * This return string will read by fopen function.
@@ -14,6 +15,7 @@ interface IDriver
 	 */
 	function createURI($relativePath);
 
+
 	/**
 	 * Check if file exists.
 	 * @var IStoreFile|string $relativePath
@@ -21,11 +23,13 @@ interface IDriver
 	 */
 	function isFileExists($relativePath);
 
+
 	/**
 	 * @param Http\FileUpload $fileUpload
 	 * @param IStoreFile|string $relativePath
 	 */
 	function save(Http\FileUpload $fileUpload, $relativePath);
+
 
 	/**
 	 * Remove file from filesystem.

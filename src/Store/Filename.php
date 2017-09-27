@@ -6,6 +6,7 @@ use Nette\Http;
 
 class Filename
 {
+
 	/**
 	 * @param Http\FileUpload $fileUpload
 	 * @param string $name - name of Upload service

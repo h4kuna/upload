@@ -5,6 +5,7 @@ include __DIR__ . '/../vendor/autoload.php';
 if (!class_exists('\Ftp')) {
 	class Ftp extends stdClass
 	{
+
 	}
 }
 

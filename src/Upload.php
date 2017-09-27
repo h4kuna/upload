@@ -7,6 +7,7 @@ use h4kuna\Upload\Store,
 
 class Upload
 {
+
 	/** @var string */
 	private $name;
 
@@ -16,6 +17,7 @@ class Upload
 	/** @var Store\Filename */
 	private $filename;
 
+
 	public function __construct($name, IDriver $driver, Store\Filename $filename)
 	{
 		$this->name = $name;
@@ -23,16 +25,15 @@ class Upload
 		$this->filename = $filename;
 	}
 
+
 	/**
 	 * Output object save to database.
 	 * Don't forget use nette rule Form::MIME_TYPE and Form::IMAGE.
 	 * $fileUpload->isOk() nette call automaticaly.
-	 *
 	 * @param Http\FileUpload $fileUpload
 	 * @param string $path
 	 * @param callable|NULL $extendStoredFile - If you need special rules then return false if is not valid.
 	 * @return Store\File
-	 *
 	 * @throws FileUploadFailedException
 	 */
 	public function save(Http\FileUpload $fileUpload, $path = '', callable $extendStoredFile = null)

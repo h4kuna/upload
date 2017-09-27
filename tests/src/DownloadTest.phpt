@@ -14,10 +14,12 @@ class TestFile implements IStoreFile
 		return 'unknown';
 	}
 
+
 	public function getName()
 	{
 		return 'unknown';
 	}
+
 
 	public function getRelativePath()
 	{
@@ -29,7 +31,7 @@ class TestFile implements IStoreFile
 /** @var Download $download */
 $download = $container->getService('uploadExtension.download.public');
 
-Assert::exception(function() use ($download) {
+Assert::exception(function () use ($download) {
 	$download->send(new TestFile());
 }, 'h4kuna\Upload\FileDownloadFailedException');
 

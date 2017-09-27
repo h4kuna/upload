@@ -4,6 +4,7 @@ namespace h4kuna\Upload;
 
 class Utils
 {
+
 	/**
 	 * @param string|IStoreFile $relativePath
 	 * @return string

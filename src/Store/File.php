@@ -6,6 +6,7 @@ use h4kuna\Upload;
 
 class File implements Upload\IStoreFile
 {
+
 	/** @var string */
 	private $relativePath;
 
@@ -18,6 +19,7 @@ class File implements Upload\IStoreFile
 	/** @var array */
 	private $extend = [];
 
+
 	public function __construct($relativePath, $name, $contentType)
 	{
 		$this->relativePath = $relativePath;
@@ -25,10 +27,12 @@ class File implements Upload\IStoreFile
 		$this->contentType = $contentType;
 	}
 
+
 	public function __set($name, $value)
 	{
 		return $this->extend[$name] = $value;
 	}
+
 
 	public function __get($name)
 	{
@@ -39,6 +43,7 @@ class File implements Upload\IStoreFile
 		return $this->extend[$name];
 	}
 
+
 	/**
 	 * @return string
 	 */
@@ -46,6 +51,7 @@ class File implements Upload\IStoreFile
 	{
 		return $this->relativePath;
 	}
+
 
 	/**
 	 * @return string
@@ -55,6 +61,7 @@ class File implements Upload\IStoreFile
 		return $this->name;
 	}
 
+
 	/**
 	 * @return string
 	 */
@@ -63,8 +70,9 @@ class File implements Upload\IStoreFile
 		return $this->contentType;
 	}
 
+
 	public function __toString()
 	{
-		return (string)$this->getRelativePath();
+		return (string) $this->getRelativePath();
 	}
 }

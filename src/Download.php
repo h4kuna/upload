@@ -7,6 +7,7 @@ use Nette\Application,
 
 class Download
 {
+
 	/** @var IDriver */
 	private $driver;
 
@@ -16,12 +17,14 @@ class Download
 	/** @var Http\Response */
 	private $response;
 
+
 	public function __construct(IDriver $driver, Http\Request $request, Http\Response $response)
 	{
 		$this->driver = $driver;
 		$this->request = $request;
 		$this->response = $response;
 	}
+
 
 	/**
 	 * @param IStoreFile $file
@@ -35,10 +38,10 @@ class Download
 			$file->getName(), $file->getContentType(), $forceDownload);
 	}
 
+
 	/**
 	 * @param IStoreFile $file
 	 * @param bool $forceDownload
-	 *
 	 * @throws FileDownloadFailedException
 	 */
 	public function send(IStoreFile $file, $forceDownload = true)
