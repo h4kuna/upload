@@ -6,9 +6,10 @@ use Nette\DI;
 
 class UploadExtension extends DI\CompilerExtension
 {
+
 	private $defaults = [
 		'ftp' => [],
-		'destinations' => '%wwwDir%/upload',
+		'destinations' => '',
 	];
 
 	private $ftp = [
@@ -21,12 +22,17 @@ class UploadExtension extends DI\CompilerExtension
 		'passive' => true,
 	];
 
+
+	public function __construct($wwwDir = null)
+	{
+		$this->defaults['destinations'] = $wwwDir . DIRECTORY_SEPARATOR . 'upload';
+	}
+
+
 	public function loadConfiguration()
 	{
-		$this->config += $this->defaults;
 		$builder = $this->getContainerBuilder();
-		$config = DI\Helpers::expand($this->config, $builder->parameters);
-
+		$config = $this->config + $this->defaults;;
 		if (!is_array($config['destinations'])) {
 			if ($config['destinations']) {
 				$config['destinations'] = ['default' => $config['destinations']];
