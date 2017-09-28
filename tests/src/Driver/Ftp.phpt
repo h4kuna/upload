@@ -8,7 +8,7 @@ use h4kuna\Upload\Upload,
 exec('composer install');
 require __DIR__ . '/vendor/autoload.php';
 
-$container = require __DIR__ . '/../../bootsrap.php';
+$container = require __DIR__ . '/../../bootsrap-container.php';
 
 if (is_file(__DIR__ . '/../../config/test.ftp.local.neon')) {
 	$ftpDriver = $container->getService('uploadExtension.driver.test');
@@ -24,14 +24,14 @@ if (is_file(__DIR__ . '/../../config/test.ftp.local.neon')) {
 
 /* @var $ftpDriver Ftp */
 
-$upload = new Upload('ftp', $ftpDriver, new \h4kuna\Upload\Store\Filename());
+$upload = new Upload($ftpDriver);
 
 Assert::same('http://skoleni.stredobod.cz/milan/home.txt', $ftpDriver->createURI('home.txt'));
 
 Assert::false($ftpDriver->isFileExists('home.txt'));
 
 /* @var $fileUploadFactory \Salamium\Testinium\FileUploadFactory */
-$fileUploadFactory = $container->getByType('Salamium\Testinium\FileUploadFactory');
+$fileUploadFactory = $container->getByType(\Salamium\Testinium\FileUploadFactory::class);
 
 $relative1 = $upload->save($fileUploadFactory->create('home.txt'));
 

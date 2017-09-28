@@ -57,10 +57,6 @@ class UploadExtension extends DI\CompilerExtension
 				->setFactory('h4kuna\Upload\Driver\Ftp', [$options['url'], $ftp]);
 		}
 
-		// Filename
-		$filename = $builder->addDefinition($this->prefix('filename'))
-			->setFactory('h4kuna\Upload\Store\Filename');
-
 		$autowired = true;
 		foreach ($config['destinations'] as $info => $destination) {
 			if (is_string($destination) && is_dir($destination)) {
@@ -80,7 +76,7 @@ class UploadExtension extends DI\CompilerExtension
 
 			// Upload
 			$builder->addDefinition($this->prefix('upload.' . $info))
-				->setFactory('h4kuna\Upload\Upload', [$info, $definition, $filename])
+				->setFactory('h4kuna\Upload\Upload', [$definition])
 				->setAutowired($autowired);
 
 			$autowired = false;

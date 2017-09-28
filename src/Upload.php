@@ -3,61 +3,88 @@
 namespace h4kuna\Upload;
 
 use h4kuna\Upload\Store,
+	h4kuna\Upload\Upload\Options,
 	Nette\Http;
 
 class Upload
 {
 
-	/** @var string */
-	private $name;
-
 	/** @var IDriver */
 	private $driver;
 
-	/** @var Store\Filename */
-	private $filename;
+	/** @var Options[] */
+	private $uploadOptions = [];
 
 
-	public function __construct($name, IDriver $driver, Store\Filename $filename)
+	public function __construct(IDriver $driver)
 	{
-		$this->name = $name;
 		$this->driver = $driver;
-		$this->filename = $filename;
+	}
+
+
+	/**
+	 * @param Http\FileUpload $fileUpload
+	 * @param Options|string|null $uploadOptions - string is path
+	 * @return Store\File
+	 * @throws FileUploadFailedException
+	 */
+	public function save(Http\FileUpload $fileUpload, $uploadOptions = null)
+	{
+		if ($uploadOptions === null || is_scalar($uploadOptions)) {
+			$uploadOptions = $this->getUploadOptions((string) $uploadOptions);
+		} elseif (!$uploadOptions instanceof Options) {
+			throw new InvalidArgumentException('Second parameter must be instance of UploadOptions or null or string.');
+		}
+
+		return self::saveFileUpload($fileUpload, $this->driver, $uploadOptions);
+	}
+
+
+	/**
+	 * @param string $key
+	 * @return Options
+	 */
+	private function getUploadOptions($key)
+	{
+		if (!isset($this->uploadOptions[$key])) {
+			$this->uploadOptions[$key] = new Options($key);
+		}
+		return $this->uploadOptions[$key];
 	}
 
 
 	/**
 	 * Output object save to database.
 	 * Don't forget use nette rule Form::MIME_TYPE and Form::IMAGE.
-	 * $fileUpload->isOk() nette call automaticaly.
+	 * $fileUpload->isOk() nette call automatically.
 	 * @param Http\FileUpload $fileUpload
-	 * @param string $path
-	 * @param callable|NULL $extendStoredFile - If you need special rules then return false if is not valid.
+	 * @param IDriver $driver
+	 * @param Options $uploadOptions
 	 * @return Store\File
 	 * @throws FileUploadFailedException
+	 * @throws UnSupportedFileTypeException
 	 */
-	public function save(Http\FileUpload $fileUpload, $path = '', callable $extendStoredFile = null)
+	public static function saveFileUpload(Http\FileUpload $fileUpload, IDriver $driver, Options $uploadOptions)
 	{
-		if ($path) {
-			$path = trim($path, '\/') . DIRECTORY_SEPARATOR;
+		if (!$uploadOptions->getFilter()->isAllowed($fileUpload->getContentType())) {
+			throw new UnSupportedFileTypeException('name: ' . $fileUpload->getName() . ', type: ' . $fileUpload->getContentType());
 		}
 
 		do {
-			$relativePath = $path . $this->filename->createUniqueName($fileUpload, $this->name);
-		} while ($this->driver->isFileExists($relativePath));
+			$relativePath = $uploadOptions->getPath() . $uploadOptions->getFilename()->createUniqueName($fileUpload);
+		} while ($driver->isFileExists($relativePath));
 
 		$storeFile = new Store\File($relativePath, $fileUpload->getName(), $fileUpload->getContentType());
 
-		if ($extendStoredFile !== null && $extendStoredFile($storeFile, $fileUpload) === false) {
-			throw new FileUploadFailedException($fileUpload->getName());
-		}
+		$uploadOptions->runExtendStoredFile($storeFile, $fileUpload);
 
 		try {
-			$this->driver->save($fileUpload, $relativePath);
+			$driver->save($fileUpload, $relativePath);
 		} catch (\Exception $e) {
-			throw new FileUploadFailedException('Driver "' . get_class($this->driver) . '" failed.', null, $e);
+			throw new FileUploadFailedException('Driver "' . get_class($driver) . '" failed.', null, $e);
 		}
 
 		return $storeFile;
 	}
+
 }

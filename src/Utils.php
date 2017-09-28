@@ -2,6 +2,8 @@
 
 namespace h4kuna\Upload;
 
+use Nette\Http;
+
 class Utils
 {
 
@@ -16,5 +18,15 @@ class Utils
 		}
 
 		return $relativePath;
+	}
+
+
+	/**
+	 * @param Http\FileUpload $fileUpload
+	 * @return string|null
+	 */
+	public static function extension(Http\FileUpload $fileUpload)
+	{
+		return pathinfo($fileUpload->getName(), PATHINFO_EXTENSION);
 	}
 }

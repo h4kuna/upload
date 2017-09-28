@@ -6,16 +6,16 @@ use Nette\Http,
 	Nette\Utils,
 	Tester\Assert;
 
-$container = require __DIR__ . '/../bootsrap.php';
+$container = require __DIR__ . '/../bootsrap-container.php';
 /* @var $fileUploadFactory \Salamium\Testinium\FileUploadFactory */
-$fileUploadFactory = $container->getByType('Salamium\Testinium\FileUploadFactory');
+$fileUploadFactory = $container->getByType(\Salamium\Testinium\FileUploadFactory::class);
 
 $tempDir = TEMP_DIR . '/upload';
 Utils\FileSystem::createDir($tempDir);
 
 // save file
 $driver = new Driver\LocalFilesystem($tempDir);
-$upload = new Upload('local', $driver, new \h4kuna\Upload\Store\Filename());
+$upload = new Upload($driver);
 $storedFile = $upload->save($fileUploadFactory->create('čivava.txt'));
 
 $absolutePath = $driver->createURI($storedFile);
@@ -23,10 +23,10 @@ Assert::true(is_file($absolutePath));
 
 // save file to sub directory
 $uploadFile = $fileUploadFactory->create('čivava.txt');
-$storedFile = $upload->save($uploadFile, 'my/path/is/here', function (Store\File $file, Http\FileUpload $uploadFile) {
+$storedFile = $upload->save($uploadFile, new \h4kuna\Upload\Upload\Options('my/path/is/here', function (Store\File $file, Http\FileUpload $uploadFile) {
 	$file->size = filesize($uploadFile->getTemporaryFile());
 	$file->name = 'foo';
-});
+}));
 
 Assert::same('foo', $storedFile->name);
 Assert::same('čivava.txt', $storedFile->getName());
@@ -35,7 +35,7 @@ Assert::contains('my/path/is/here/', (string) $storedFile);
 
 Assert::exception(function () use ($storedFile) {
 	$storedFile->foo;
-}, 'h4kuna\Upload\InvalidArgumentException');
+}, InvalidArgumentException::class);
 
 Assert::true($storedFile->size > 0);
 Assert::true($driver->isFileExists($storedFile));
@@ -45,9 +45,17 @@ Assert::false($driver->isFileExists($storedFile));
 
 // upload failed
 Assert::exception(function () use ($upload, $fileUploadFactory) {
-	$upload->save($fileUploadFactory->create('čivava.txt', UPLOAD_ERR_NO_FILE), null, function (Store\File $file, Http\FileUpload $uploadFile) {
-		return $uploadFile->isOk();
-	});
-}, 'h4kuna\Upload\FileUploadFailedException');
+	$upload->save($fileUploadFactory->create('čivava.txt', UPLOAD_ERR_NO_FILE));
+}, FileUploadFailedException::class);
 
+// upload failed
+Assert::exception(function () use ($upload, $fileUploadFactory) {
+	$upload->save($fileUploadFactory->create('čivava.txt'), []);
+}, InvalidArgumentException::class);
+
+
+// upload failed
+Assert::exception(function () use ($upload, $fileUploadFactory) {
+	$upload->save($fileUploadFactory->create('čivava.txt'), new \h4kuna\Upload\Upload\Options('', null, null, new \h4kuna\Upload\Upload\Filter('application/json')));
+}, UnSupportedFileTypeException::class);
 

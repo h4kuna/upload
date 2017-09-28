@@ -4,37 +4,12 @@ use h4kuna\Upload,
 	Nette\DI,
 	Tester\Assert;
 
-if (!class_exists('Ftp')) {
-	class Ftp extends \stdClass
-	{
-		public function connect() {}
-
-		public function login() {}
-
-		public function pasv() {}
-	}
-}
-
-$container = require __DIR__ . '/../../../vendor/autoload.php';
+$container = require __DIR__ . '/../../bootsrap.php';
 
 $compiler = new DI\Compiler();
-$compiler->addConfig([
-	'parameters' => [
-		'tempDir' => TEMP_DIR
-	],
-	'services' => [
-		'http.requestFactory' => [
-			'factory' => 'Salamium\Testinium\HttpRequestFactory'
-		],
-		'http.request' => [
-			'factory' => '@http.requestFactory::create',
-			'arguments' => ['http://example.com/']
-		],
-		'http.response' => [
-			'factory' => 'Nette\Http\Response'
-		],
-	]
-]);
+$http = new \Nette\Bridges\HttpDI\HttpExtension();
+$compiler->addExtension('http', $http);
+
 $extension = new Upload\DI\UploadExtension(TEMP_DIR);
 $extension->setConfig([
 	'ftp' => [

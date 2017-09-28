@@ -19,6 +19,9 @@ The best way to install h4kuna/upload is using composer:
 $ composer require h4kuna/upload
 ```
 
+## Support
+v 0.1.0 - 0.2.2 support php <= 5.5
+
 For begin
 -----------
 Simple registration like extension
@@ -47,7 +50,7 @@ uploadExtension:
 
 First destination (in example **public**) is autowired. For every destination is created service **upload** and **download**. 
 
-Manualy add dependency:
+Manually add dependency:
 ```neon
 services:
     - UploadControl(@uploadExtension.upload.private)
@@ -57,43 +60,69 @@ services:
  
 
 Inject Upload service to your class and use it. Return an object **h4kuna\Upload\Store\File** let's save all property for later create **IStoreFile**.
+
+Simple usage for upload:
 ```php
 /* @var $upload h4kuna\Upload\Upload */
 
 
 try {
-	/* @var $file Nette\Http\FileUpload */
-	/* @var $storedFile h4kuna\Upload\Store\File */
-	$storedFile = $upload->save($file);
-	// or
-	$storedFile = $upload->save($file, 'subdir/by/id', function(h4kuna\Upload\Store\File $storedFile, Nette\Http\FileUpload $uploadFile) {
-	    // if you need add optional property like size, etc. 
-	    $storedFile->isImage = $uploadFile->isImage();
-	    
-	    // Custom rule: allow image bigger then 500x500px
-	    if ($storedFile->isImage) {
-	        $image = $uploadFile->getImage();
-	        if($image->getHeight() < 500 || $image->getWidth() < 500) {
-	            return false; // this return throw exception
-	        }
-	    }
-	    
-	});
+    /* @var $file Nette\Http\FileUpload */
+    
+    // second parameter is optional
+    $storedFile = $upload->save($file, 'path/by/id');
+	
 
-	// example how to save to database data for IStoreFile
-	$fileTable->insert([
-		'name' => $storedFile->getName(),
-		'filesystem' => $storedFile->getRelativePath(),
-		'type' => $storedFile->getContentType(),
-		
-		// optional
-		'size' => $file->getSize(),
-		'is_image' => $storedFile->isImage
-	]);
+    /* @var $storedFile h4kuna\Upload\Store\File */
+    $fileTable->insert([
+        // required parameters for response (Download) for create IStoreFile
+        'name' => $storedFile->getName(),
+        'filesystem' => $storedFile->getRelativePath(),
+        'type' => $storedFile->getContentType(),
+        
+        // optional
+        'size' => $file->getSize(),
+        'is_image' => $storedFile->isImage
+    ]);
 } catch (\h4kuna\Upload\FileUploadFailedException $e) {
 	// upload is failed
 }
 ```
+
+For more upload options create object [h4kuna\Upload\Upload\Options](src/Upload/Options.php).
+
+- you can define where to save
+- extend IStoreFile that is returned by Upload::save()
+- define behavior for save on filesystem by [h4kuna\Upload\Upload\Filename](src/Upload/Filename.php)
+- create content type filter by [h4kuna\Upload\Upload\Filter](src/Upload/Filter.php)
+
+If filter is defined than you can expect new exception **UnSupportedFileTypeException**. Both exception in example has same parent **UploadException**.
+
+```php
+$filter = h4kuna\Upload\Upload\FilterFactory::createImage();
+$name = new h4kuna\Upload\Upload\Filename(); // default
+try {
+    $storedFile = $upload->save($file, new h4kuna\Upload\Upload\Options('subdir/by/id', function(h4kuna\Upload\Store\File $storedFile, Nette\Http\FileUpload $uploadFile) {
+        // if you need add optional property like size, etc. 
+        $storedFile->isImage = $uploadFile->isImage();
+        
+        // Custom rule: allow image bigger then 500x500px
+        if ($storedFile->isImage) {
+            $image = $uploadFile->getImage();
+            if($image->getHeight() < 500 || $image->getWidth() < 500) {
+                return false; // this return throw exception
+            }
+        }
+    
+    }, $name, $filter));
+} catch (FileUploadFailedException $e) {
+    // driver is failed
+} catch (UnSupportedFileTypeException $e) {
+    // unsupported file, filter refused
+}
+```
+
+Here is prepared object [h4kuna\Upload\UploadSpecific](src/UploadSpecific.php).
 
 Now create [Nette\Application\Responses\FileResponse](https://api.nette.org/Nette.Application.Responses.FileResponse.html) for download file.
 

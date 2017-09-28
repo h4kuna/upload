@@ -4,7 +4,7 @@ namespace h4kuna\Upload;
 
 use Tester\Assert;
 
-$container = require __DIR__ . '/../bootsrap.php';
+$container = require __DIR__ . '/../bootsrap-container.php';
 
 class TestFile implements IStoreFile
 {
@@ -33,5 +33,5 @@ $download = $container->getService('uploadExtension.download.public');
 
 Assert::exception(function () use ($download) {
 	$download->send(new TestFile());
-}, 'h4kuna\Upload\FileDownloadFailedException');
+}, \h4kuna\Upload\FileDownloadFailedException::class);
 
