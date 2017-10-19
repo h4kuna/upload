@@ -2,7 +2,9 @@
 
 namespace h4kuna\Upload;
 
-use Nette\Http;
+use h4kuna\Upload\Upload\Options,
+	Nette\Http,
+	Nette\Forms\Controls;
 
 class UploadSpecific
 {
@@ -18,6 +20,20 @@ class UploadSpecific
 	{
 		$this->driver = $driver;
 		$this->uploadOptions = $uploadOptions;
+	}
+
+
+	/**
+	 * @param Controls\UploadControl $uploadControl
+	 * @param $message
+	 * @return Controls\UploadControl
+	 */
+	public function setMimeTypeRuleForUploadControl(Controls\UploadControl $uploadControl, $message)
+	{
+		if ($this->uploadOptions->getContentTypeFilter() !== null) {
+			Utils::setMimeTypeRule($this->uploadOptions->getContentTypeFilter(), $uploadControl, $message);
+		}
+		return $uploadControl;
 	}
 
 

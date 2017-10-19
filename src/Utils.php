@@ -2,7 +2,10 @@
 
 namespace h4kuna\Upload;
 
-use Nette\Http;
+use h4kuna\Upload\Upload\ContentTypeFilter,
+	Nette\Forms\Controls\UploadControl,
+	Nette\Forms\Form,
+	Nette\Http;
 
 class Utils
 {
@@ -28,5 +31,18 @@ class Utils
 	public static function extension(Http\FileUpload $fileUpload)
 	{
 		return pathinfo($fileUpload->getName(), PATHINFO_EXTENSION);
+	}
+
+
+	/**
+	 * @param ContentTypeFilter $contentTypeFilter
+	 * @param UploadControl $uploadControl
+	 * @param string $message
+	 * @return UploadControl
+	 */
+	public static function setMimeTypeRule(ContentTypeFilter $contentTypeFilter, UploadControl $uploadControl, $message)
+	{
+		$uploadControl->addRule(Form::MIME_TYPE, $message, $contentTypeFilter->getValues());
+		return $uploadControl;
 	}
 }

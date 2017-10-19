@@ -5,16 +5,15 @@ namespace h4kuna\Upload\Upload;
 class FilterFactory
 {
 
-	/** @return Filter */
 	public static function createImage()
 	{
-		return new Filter('image/png', 'image/pjpeg', 'image/jpeg', 'image/gif');
+		return new ContentTypeFilter('image/png', 'image/pjpeg', 'image/jpeg', 'image/gif');
 	}
 
 
 	public static function createAudio()
 	{
-		return new Filter(
+		return new ContentTypeFilter(
 			'audio/mpeg3',
 			'audio/x-mpeg-3',
 			'audio/ogg',
@@ -24,7 +23,7 @@ class FilterFactory
 
 	public static function createDocument()
 	{
-		return new Filter(
+		return new ContentTypeFilter(
 			'text/plain',
 			'application/msword',
 			'application/vnd.ms-excel',

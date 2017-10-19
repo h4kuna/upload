@@ -53,9 +53,8 @@ Assert::exception(function () use ($upload, $fileUploadFactory) {
 	$upload->save($fileUploadFactory->create('čivava.txt'), []);
 }, InvalidArgumentException::class);
 
-
 // upload failed
 Assert::exception(function () use ($upload, $fileUploadFactory) {
-	$upload->save($fileUploadFactory->create('čivava.txt'), new \h4kuna\Upload\Upload\Options('', null, null, new \h4kuna\Upload\Upload\Filter('application/json')));
+	$upload->save($fileUploadFactory->create('čivava.txt'), new \h4kuna\Upload\Upload\Options('', null, null, new \h4kuna\Upload\Upload\ContentTypeFilter('application/json')));
 }, UnSupportedFileTypeException::class);
 

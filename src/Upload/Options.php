@@ -17,11 +17,11 @@ final class Options
 	/** @var Filename */
 	private $filename;
 
-	/** @var Filter */
-	private $filter;
+	/** @var ContentTypeFilter */
+	private $contentTypeFilter;
 
 
-	public function __construct($path = '', callable $extendStoredFile = null, Filename $filename = null, Filter $filter = null)
+	public function __construct($path = '', callable $extendStoredFile = null, Filename $filename = null, ContentTypeFilter $contentTypeFilter = null)
 	{
 		if ($path !== '') {
 			$path = trim($path, '\/') . DIRECTORY_SEPARATOR;
@@ -29,7 +29,7 @@ final class Options
 
 		$this->path = $path;
 		$this->filename = $filename ?: new Filename();
-		$this->filter = $filter ?: new Filter();
+		$this->contentTypeFilter = $contentTypeFilter;
 		$this->extendStoredFile = $extendStoredFile;
 	}
 
@@ -63,10 +63,11 @@ final class Options
 
 
 	/**
-	 * @return Filter
+	 * @return ContentTypeFilter|null
 	 */
-	public function getFilter()
+	public function getContentTypeFilter()
 	{
-		return $this->filter;
+		return $this->contentTypeFilter;
 	}
+
 }
