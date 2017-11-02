@@ -27,7 +27,7 @@ For begin
 Simple registration like extension
 ```neon
 extensions:
-    uploadExtension: h4kuna\Upload\DI\UploadExtension(%wwwDir%)
+    uploadExtension: h4kuna\Upload\DI\UploadExtension
 ```
 You need create writeable dir **%wwwDir%/upload** and use new services.
 - **uploadExtension.driver.default** object LocalFilesystem
