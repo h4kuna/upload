@@ -1,8 +1,8 @@
 <?php
 
-use h4kuna\Upload,
-	Nette\DI,
-	Tester\Assert;
+use h4kuna\Upload;
+use Nette\DI;
+use Tester\Assert;
 
 $container = require __DIR__ . '/../../bootsrap.php';
 

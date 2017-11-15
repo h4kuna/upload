@@ -2,6 +2,8 @@
 
 namespace h4kuna\Upload\DI;
 
+use h4kuna\Upload;
+use h4kuna\Upload\Driver;
 use Nette\DI;
 
 class UploadExtension extends DI\CompilerExtension

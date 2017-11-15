@@ -2,8 +2,8 @@
 
 namespace h4kuna\Upload;
 
-use Nette\Application,
-	Nette\Http;
+use Nette\Application;
+use Nette\Http;
 
 class Download
 {

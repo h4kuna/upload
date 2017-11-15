@@ -2,8 +2,8 @@
 
 namespace h4kuna\Upload\Upload;
 
-use h4kuna\Upload\Store,
-	Nette\Http;
+use h4kuna\Upload\Store;
+use Nette\Http;
 
 final class Options
 {

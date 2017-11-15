@@ -2,8 +2,8 @@
 
 namespace h4kuna\Upload\Upload;
 
-use h4kuna\Upload\InvalidArgumentException,
-	Nette\Http;
+use h4kuna\Upload\InvalidArgumentException;
+use Nette\Http;
 
 class ContentTypeFilter
 {

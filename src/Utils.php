@@ -2,10 +2,10 @@
 
 namespace h4kuna\Upload;
 
-use h4kuna\Upload\Upload\ContentTypeFilter,
-	Nette\Forms\Controls\UploadControl,
-	Nette\Forms\Form,
-	Nette\Http;
+use h4kuna\Upload\Upload\ContentTypeFilter;
+use Nette\Forms\Controls\UploadControl;
+use Nette\Forms\Form;
+use Nette\Http;
 
 class Utils
 {

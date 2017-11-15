@@ -2,9 +2,9 @@
 
 namespace h4kuna\Upload;
 
-use h4kuna\Upload\Store,
-	h4kuna\Upload\Upload\Options,
-	Nette\Http;
+use h4kuna\Upload\Store;
+use h4kuna\Upload\Upload\Options;
+use Nette\Http;
 
 class Upload
 {

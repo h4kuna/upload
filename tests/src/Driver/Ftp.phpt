@@ -2,8 +2,8 @@
 
 namespace h4kuna\Upload\Driver;
 
-use h4kuna\Upload\Upload,
-	Tester\Assert;
+use h4kuna\Upload\Upload;
+use Tester\Assert;
 
 exec('composer install');
 require __DIR__ . '/vendor/autoload.php';

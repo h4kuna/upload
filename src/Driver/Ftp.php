@@ -2,8 +2,8 @@
 
 namespace h4kuna\Upload\Driver;
 
-use h4kuna\Upload,
-	Nette\Http;
+use h4kuna\Upload;
+use Nette\Http;
 
 class Ftp implements Upload\IDriver
 {

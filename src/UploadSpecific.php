@@ -2,9 +2,9 @@
 
 namespace h4kuna\Upload;
 
-use h4kuna\Upload\Upload\Options,
-	Nette\Http,
-	Nette\Forms\Controls;
+use h4kuna\Upload\Upload\Options;
+use Nette\Http;
+use Nette\Forms\Controls;
 
 class UploadSpecific
 {

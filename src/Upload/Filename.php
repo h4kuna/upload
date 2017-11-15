@@ -2,8 +2,8 @@
 
 namespace h4kuna\Upload\Upload;
 
-use h4kuna\Upload\Utils,
-	Nette\Http;
+use h4kuna\Upload\Utils;
+use Nette\Http;
 
 class Filename
 {

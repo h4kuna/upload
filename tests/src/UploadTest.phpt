@@ -2,9 +2,9 @@
 
 namespace h4kuna\Upload;
 
-use Nette\Http,
-	Nette\Utils,
-	Tester\Assert;
+use Nette\Http;
+use Nette\Utils;
+use Tester\Assert;
 
 $container = require __DIR__ . '/../bootsrap-container.php';
 /* @var $fileUploadFactory \Salamium\Testinium\FileUploadFactory */

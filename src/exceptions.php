@@ -4,6 +4,8 @@ namespace h4kuna\Upload;
 
 class InvalidArgumentException extends \InvalidArgumentException {}
 
+class InvalidStateException extends \RuntimeException {}
+
 // download
 abstract class DownloadException extends \Exception {}
 

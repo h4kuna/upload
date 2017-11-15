@@ -2,8 +2,8 @@
 
 namespace h4kuna\Upload\Upload;
 
-use Nette\Forms,
-	Nette\Http;
+use Nette\Forms;
+use Nette\Http;
 
 /**
  * @internal
