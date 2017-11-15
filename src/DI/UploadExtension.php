@@ -11,7 +11,7 @@ class UploadExtension extends DI\CompilerExtension
 
 	private $defaults = [
 		'ftp' => [],
-		'destinations' => '',
+		'destinations' => [],
 	];
 
 	private $ftp = [
@@ -25,23 +25,17 @@ class UploadExtension extends DI\CompilerExtension
 	];
 
 
-	public function __construct($wwwDir = null)
+	public function __construct($destinations = null)
 	{
-		$this->defaults['destinations'] = $wwwDir . DIRECTORY_SEPARATOR . 'upload';
+		$this->defaults['destinations'] = self::prepareDestination($destinations);
 	}
 
 
 	public function loadConfiguration()
 	{
 		$builder = $this->getContainerBuilder();
-		$config = $this->config + $this->defaults;;
-		if (!is_array($config['destinations'])) {
-			if ($config['destinations']) {
-				$config['destinations'] = ['default' => $config['destinations']];
-			} else {
-				$config['destinations'] = [];
-			}
-		}
+		$config = $this->config + $this->defaults;
+		$config['destinations'] = self::prepareDestination($config['destinations']);
 
 		foreach ($config['ftp'] as $name => $options) {
 			$options += $this->ftp;
@@ -56,14 +50,18 @@ class UploadExtension extends DI\CompilerExtension
 			}
 
 			$config['destinations'][$name] = $builder->addDefinition($this->prefix('driver.' . $name))
-				->setFactory('h4kuna\Upload\Driver\Ftp', [$options['url'], $ftp]);
+				->setFactory(Driver\Ftp::class, [$options['url'], $ftp]);
+		}
+
+		if (!$config['destinations']) {
+			throw new Upload\InvalidStateException('Destinations are empty! Fill it like path where to save files.');
 		}
 
 		$autowired = true;
 		foreach ($config['destinations'] as $info => $destination) {
 			if (is_string($destination) && is_dir($destination)) {
 				$definition = $builder->addDefinition($this->prefix('driver.' . $info))
-					->setFactory('h4kuna\Upload\Driver\LocalFilesystem', [$destination])
+					->setFactory(Driver\LocalFilesystem::class, [$destination])
 					->setAutowired($autowired);
 			} elseif ($destination instanceof DI\ServiceDefinition) {
 				$definition = $destination->setAutowired($autowired);
@@ -73,15 +71,27 @@ class UploadExtension extends DI\CompilerExtension
 
 			// Download
 			$builder->addDefinition($this->prefix('download.' . $info))
-				->setFactory('h4kuna\Upload\Download', [$definition, '@http.request', '@http.response'])
+				->setFactory(Upload\Download::class, [$definition, '@http.request', '@http.response'])
 				->setAutowired($autowired);
 
 			// Upload
 			$builder->addDefinition($this->prefix('upload.' . $info))
-				->setFactory('h4kuna\Upload\Upload', [$definition])
+				->setFactory(Upload\Upload::class, [$definition])
 				->setAutowired($autowired);
 
 			$autowired = false;
 		}
+	}
+
+
+	private static function prepareDestination($destination)
+	{
+		if (!is_array($destination)) {
+			if ($destination) {
+				return ['default' => $destination];
+			}
+			return [];
+		}
+		return $destination;
 	}
 }
