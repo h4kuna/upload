@@ -11,7 +11,7 @@ class UploadExtension extends DI\CompilerExtension
 
 	private $defaults = [
 		'ftp' => [],
-		'destinations' => [],
+		'destinations' => '', // can be array
 	];
 
 	private $ftp = [
@@ -27,15 +27,18 @@ class UploadExtension extends DI\CompilerExtension
 
 	public function __construct($destinations = null)
 	{
-		$this->defaults['destinations'] = self::prepareDestination($destinations);
+		if ($destinations !== null) {
+			$this->defaults['destinations'] = $this->prepareDestination($destinations);
+		}
 	}
 
 
 	public function loadConfiguration()
 	{
 		$builder = $this->getContainerBuilder();
-		$config = $this->config + $this->defaults;
-		$config['destinations'] = self::prepareDestination($config['destinations']);
+		$config = $this->validateConfig($this->defaults);
+
+		$config['destinations'] = $this->prepareDestination($config['destinations']);
 
 		foreach ($config['ftp'] as $name => $options) {
 			$options += $this->ftp;
@@ -59,7 +62,11 @@ class UploadExtension extends DI\CompilerExtension
 
 		$autowired = true;
 		foreach ($config['destinations'] as $info => $destination) {
-			if (is_string($destination) && is_dir($destination)) {
+			if (is_string($destination)) {
+				if (!is_dir($destination)) {
+					throw new Upload\InvalidStateException('Create writable directory: "' . $destination . '"');
+				}
+
 				$definition = $builder->addDefinition($this->prefix('driver.' . $info))
 					->setFactory(Driver\LocalFilesystem::class, [$destination])
 					->setAutowired($autowired);
@@ -84,14 +91,19 @@ class UploadExtension extends DI\CompilerExtension
 	}
 
 
-	private static function prepareDestination($destination)
+	private function prepareDestination($destination)
 	{
-		if (!is_array($destination)) {
-			if ($destination) {
-				return ['default' => $destination];
-			}
-			return [];
+		if (is_array($destination)) {
+			return $destination;
 		}
-		return $destination;
+
+		if (!$destination) {
+			if ($this->compiler === NULL || !isset($this->getContainerBuilder()->parameters['wwwDir'])) {
+				return [];
+			}
+
+			$destination = $this->getContainerBuilder()->parameters['wwwDir'] . '/upload';
+		}
+		return ['default' => $destination];
 	}
 }
