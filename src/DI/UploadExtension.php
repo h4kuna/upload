@@ -24,14 +24,12 @@ class UploadExtension extends DI\CompilerExtension
 		'passive' => true,
 	];
 
-
 	public function __construct($destinations = null)
 	{
 		if ($destinations !== null) {
 			$this->defaults['destinations'] = $this->prepareDestination($destinations);
 		}
 	}
-
 
 	public function loadConfiguration()
 	{
@@ -90,7 +88,6 @@ class UploadExtension extends DI\CompilerExtension
 		}
 	}
 
-
 	private function prepareDestination($destination)
 	{
 		if (is_array($destination)) {
@@ -98,7 +95,7 @@ class UploadExtension extends DI\CompilerExtension
 		}
 
 		if (!$destination) {
-			if ($this->compiler === NULL || !isset($this->getContainerBuilder()->parameters['wwwDir'])) {
+			if ($this->compiler === null || !isset($this->getContainerBuilder()->parameters['wwwDir'])) {
 				return [];
 			}
 
@@ -106,4 +103,5 @@ class UploadExtension extends DI\CompilerExtension
 		}
 		return ['default' => $destination];
 	}
+
 }

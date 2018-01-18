@@ -15,13 +15,11 @@ class UploadSpecific
 	/** @var Options */
 	private $uploadOptions;
 
-
 	public function __construct(IDriver $driver, Options $uploadOptions)
 	{
 		$this->driver = $driver;
 		$this->uploadOptions = $uploadOptions;
 	}
-
 
 	/**
 	 * @param Controls\UploadControl $uploadControl
@@ -36,7 +34,6 @@ class UploadSpecific
 		return $uploadControl;
 	}
 
-
 	/**
 	 * @param Http\FileUpload $fileUpload
 	 * @return Store\File
@@ -47,4 +44,5 @@ class UploadSpecific
 	{
 		return Upload::saveFileUpload($fileUpload, $this->driver, $this->uploadOptions);
 	}
+
 }

@@ -23,7 +23,6 @@ class Utils
 		return $relativePath;
 	}
 
-
 	/**
 	 * @param Http\FileUpload $fileUpload
 	 * @return string|null
@@ -32,7 +31,6 @@ class Utils
 	{
 		return pathinfo($fileUpload->getName(), PATHINFO_EXTENSION);
 	}
-
 
 	/**
 	 * @param ContentTypeFilter $contentTypeFilter
@@ -45,4 +43,5 @@ class Utils
 		$uploadControl->addRule(Form::MIME_TYPE, $message, $contentTypeFilter->getValues());
 		return $uploadControl;
 	}
+
 }

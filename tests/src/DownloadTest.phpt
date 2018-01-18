@@ -14,12 +14,10 @@ class TestFile implements IStoreFile
 		return 'unknown';
 	}
 
-
 	public function getName()
 	{
 		return 'unknown';
 	}
-
 
 	public function getRelativePath()
 	{

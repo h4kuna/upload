@@ -15,7 +15,7 @@ $extension->setConfig([
 	'ftp' => [
 		'dummy' => [
 		],
-	]
+	],
 ]);
 
 $compiler->addExtension('h4kuna.upload', $extension);

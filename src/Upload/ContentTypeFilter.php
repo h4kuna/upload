@@ -14,7 +14,6 @@ class ContentTypeFilter
 	/** @var UploadControlFake */
 	private static $uploadControl;
 
-
 	public function __construct(...$values)
 	{
 		$this->values = $values;
@@ -22,7 +21,6 @@ class ContentTypeFilter
 			throw new InvalidArgumentException('Parameter $values must be non-empty.');
 		}
 	}
-
 
 	/**
 	 * @param Http\FileUpload $fileUpload
@@ -33,7 +31,6 @@ class ContentTypeFilter
 		return self::getUploadControl()->isValid($this, $fileUpload);
 	}
 
-
 	/**
 	 * @return array
 	 */
@@ -41,7 +38,6 @@ class ContentTypeFilter
 	{
 		return $this->values;
 	}
-
 
 	private static function getUploadControl()
 	{

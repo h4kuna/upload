@@ -15,13 +15,11 @@ class FileUpload extends \Nette\Http\FileUpload
 
 	private $contentType;
 
-
 	public function __construct($contentType)
 	{
 		$this->contentType = $contentType;
 		parent::__construct(['name' => 'foo', 'size' => 1986, 'tmp_name' => 'bar', 'error' => UPLOAD_ERR_OK]);
 	}
-
 
 	public function getContentType()
 	{

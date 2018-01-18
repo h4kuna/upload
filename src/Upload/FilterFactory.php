@@ -10,7 +10,6 @@ class FilterFactory
 		return new ContentTypeFilter('image/png', 'image/pjpeg', 'image/jpeg', 'image/gif');
 	}
 
-
 	public static function createAudio()
 	{
 		return new ContentTypeFilter(
@@ -19,7 +18,6 @@ class FilterFactory
 			'audio/ogg',
 			'audio/x-aiff');
 	}
-
 
 	public static function createDocument()
 	{
@@ -33,4 +31,5 @@ class FilterFactory
 			'application/vnd.ms-powerpoint',
 			'application/vnd.openxmlformats-officedocument.presentationml.presentation');
 	}
+
 }

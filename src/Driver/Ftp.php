@@ -14,25 +14,21 @@ class Ftp implements Upload\IDriver
 	/** @var \Ftp */
 	private $ftp;
 
-
 	public function __construct($hostUrl, \Ftp $ftp)
 	{
 		$this->hostUrl = $hostUrl;
 		$this->ftp = $ftp;
 	}
 
-
 	public function createURI($relativePath)
 	{
 		return $this->hostUrl . '/' . Upload\Utils::makeRelativePath($relativePath);
 	}
 
-
 	public function isFileExists($relativePath)
 	{
 		return $this->ftp->fileExists(Upload\Utils::makeRelativePath($relativePath));
 	}
-
 
 	public function save(Http\FileUpload $fileUpload, $relativePath)
 	{
@@ -45,7 +41,6 @@ class Ftp implements Upload\IDriver
 		@unlink($fileUpload->getTemporaryFile());
 	}
 
-
 	public function remove($relativePath)
 	{
 		$path = Upload\Utils::makeRelativePath($relativePath);
@@ -53,4 +48,5 @@ class Ftp implements Upload\IDriver
 
 		return !$this->isFileExists($path);
 	}
+
 }

@@ -17,4 +17,5 @@ class Filename
 		$ext = Utils::extension($fileUpload);
 		return sha1(microtime(true) . '.' . $fileUpload->getName()) . '.' . $ext;
 	}
+
 }

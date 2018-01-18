@@ -15,7 +15,6 @@ interface IDriver
 	 */
 	function createURI($relativePath);
 
-
 	/**
 	 * Check if file exists.
 	 * @var IStoreFile|string $relativePath
@@ -23,13 +22,11 @@ interface IDriver
 	 */
 	function isFileExists($relativePath);
 
-
 	/**
 	 * @param Http\FileUpload $fileUpload
 	 * @param IStoreFile|string $relativePath
 	 */
 	function save(Http\FileUpload $fileUpload, $relativePath);
-
 
 	/**
 	 * Remove file from filesystem.
@@ -37,4 +34,5 @@ interface IDriver
 	 * @return bool
 	 */
 	function remove($relativePath);
+
 }

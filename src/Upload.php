@@ -15,12 +15,10 @@ class Upload
 	/** @var Options[] */
 	private $uploadOptions = [];
 
-
 	public function __construct(IDriver $driver)
 	{
 		$this->driver = $driver;
 	}
-
 
 	/**
 	 * @param Http\FileUpload $fileUpload
@@ -39,7 +37,6 @@ class Upload
 		return self::saveFileUpload($fileUpload, $this->driver, $uploadOptions);
 	}
 
-
 	/**
 	 * @param string $key
 	 * @return Options
@@ -51,7 +48,6 @@ class Upload
 		}
 		return $this->uploadOptions[$key];
 	}
-
 
 	/**
 	 * Output object save to database.

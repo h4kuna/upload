@@ -17,14 +17,12 @@ class Download
 	/** @var Http\Response */
 	private $response;
 
-
 	public function __construct(IDriver $driver, Http\Request $request, Http\Response $response)
 	{
 		$this->driver = $driver;
 		$this->request = $request;
 		$this->response = $response;
 	}
-
 
 	/**
 	 * @param IStoreFile $file
@@ -37,7 +35,6 @@ class Download
 			$this->driver->createURI($file),
 			$file->getName(), $file->getContentType(), $forceDownload);
 	}
-
 
 	/**
 	 * @param IStoreFile $file

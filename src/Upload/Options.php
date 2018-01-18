@@ -20,7 +20,6 @@ final class Options
 	/** @var ContentTypeFilter */
 	private $contentTypeFilter;
 
-
 	public function __construct($path = '', callable $extendStoredFile = null, Filename $filename = null, ContentTypeFilter $contentTypeFilter = null)
 	{
 		if ($path !== '') {
@@ -33,7 +32,6 @@ final class Options
 		$this->extendStoredFile = $extendStoredFile;
 	}
 
-
 	/**
 	 * @return string
 	 */
@@ -41,7 +39,6 @@ final class Options
 	{
 		return $this->path;
 	}
-
 
 	/**
 	 * @param Store\File $storeFile
@@ -52,7 +49,6 @@ final class Options
 		$this->extendStoredFile !== null && call_user_func($this->extendStoredFile, $storeFile, $fileUpload);
 	}
 
-
 	/**
 	 * @return Filename
 	 */
@@ -60,7 +56,6 @@ final class Options
 	{
 		return $this->filename;
 	}
-
 
 	/**
 	 * @return ContentTypeFilter|null
