@@ -14,13 +14,13 @@ final class Options
 	/** @var callback */
 	private $extendStoredFile;
 
-	/** @var Filename */
+	/** @var IFileName */
 	private $filename;
 
 	/** @var ContentTypeFilter */
 	private $contentTypeFilter;
 
-	public function __construct($path = '', callable $extendStoredFile = null, Filename $filename = null, ContentTypeFilter $contentTypeFilter = null)
+	public function __construct($path = '', callable $extendStoredFile = null, IFileName $filename = null, ContentTypeFilter $contentTypeFilter = null)
 	{
 		if ($path !== '') {
 			$path = trim($path, '\/') . DIRECTORY_SEPARATOR;
@@ -50,7 +50,7 @@ final class Options
 	}
 
 	/**
-	 * @return Filename
+	 * @return IFilename
 	 */
 	public function getFilename()
 	{
