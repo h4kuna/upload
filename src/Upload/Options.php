@@ -3,6 +3,7 @@
 namespace h4kuna\Upload\Upload;
 
 use h4kuna\Upload\Store;
+use h4kuna\Upload\Upload\Filename\UniqueName;
 use Nette\Http;
 
 final class Options
@@ -27,7 +28,7 @@ final class Options
 		}
 
 		$this->path = $path;
-		$this->filename = $filename ?: new Filename();
+		$this->filename = $filename ?: new UniqueName();
 		$this->contentTypeFilter = $contentTypeFilter;
 		$this->extendStoredFile = $extendStoredFile;
 	}

@@ -1,11 +1,12 @@
 <?php
 
-namespace h4kuna\Upload\Upload;
+namespace h4kuna\Upload\Upload\Filename;
 
+use h4kuna\Upload\Upload\IFileName;
 use h4kuna\Upload\Utils;
 use Nette\Http;
 
-class Filename implements IFileName
+class UniqueName implements IFileName
 {
 
 	/**
