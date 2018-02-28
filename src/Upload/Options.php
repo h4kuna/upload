@@ -12,7 +12,7 @@ final class Options
 	/** @var string */
 	private $path = '';
 
-	/** @var callback */
+	/** @var callable|null */
 	private $extendStoredFile;
 
 	/** @var IFileName */
@@ -51,7 +51,7 @@ final class Options
 	}
 
 	/**
-	 * @return IFilename
+	 * @return IFileName
 	 */
 	public function getFilename()
 	{

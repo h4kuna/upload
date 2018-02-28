@@ -23,7 +23,7 @@ class UploadSpecific
 
 	/**
 	 * @param Controls\UploadControl $uploadControl
-	 * @param $message
+	 * @param string $message
 	 * @return Controls\UploadControl
 	 */
 	public function setMimeTypeRuleForUploadControl(Controls\UploadControl $uploadControl, $message)

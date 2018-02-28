@@ -66,7 +66,7 @@ class File implements Upload\IStoreFile
 
 	public function __toString()
 	{
-		return (string) $this->getRelativePath();
+		return $this->getRelativePath();
 	}
 
 }
