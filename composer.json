@@ -12,6 +12,7 @@
 		}
 	],
 	"require": {
+		"php": ">=7.1",
 		"nette/application": "^2.0",
 		"nette/bootstrap": "^2.0",
 		"nette/forms": "^2.0",
