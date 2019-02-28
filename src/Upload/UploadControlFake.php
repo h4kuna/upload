@@ -16,7 +16,8 @@ class UploadControlFake extends Forms\Controls\UploadControl
 		parent::__construct(null, false);
 	}
 
-	public function isValid(ContentTypeFilter $contentTypeFilter, Http\FileUpload $fileUpload)
+
+	public function isValid(ContentTypeFilter $contentTypeFilter, Http\FileUpload $fileUpload): bool
 	{
 		$this->value = $fileUpload;
 		return Forms\Validator::validateMimeType($this, $contentTypeFilter->getValues());

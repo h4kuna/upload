@@ -9,11 +9,7 @@ use Nette\Http;
 class UniqueName implements IFileName
 {
 
-	/**
-	 * @param Http\FileUpload $fileUpload
-	 * @return string
-	 */
-	public function createUniqueName(Http\FileUpload $fileUpload)
+	public function createUniqueName(Http\FileUpload $fileUpload): string
 	{
 		$ext = Utils::extension($fileUpload);
 		return sha1(microtime(true) . '.' . $fileUpload->getName()) . '.' . $ext;

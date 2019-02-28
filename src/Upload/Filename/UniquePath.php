@@ -15,27 +15,20 @@ class UniquePath implements IFileName
 	/** @var int */
 	private $middle = 2;
 
-	/**
-	 * @param int $length
-	 */
-	public function setLength($length)
+
+	public function setLength(int $length): void
 	{
 		$this->length = $length;
 	}
 
-	/**
-	 * @param int $middle
-	 */
-	public function setMiddle($middle)
+
+	public function setMiddle(int $middle): void
 	{
 		$this->middle = $middle;
 	}
 
-	/**
-	 * @param Http\FileUpload $fileUpload
-	 * @return string
-	 */
-	public function createUniqueName(Http\FileUpload $fileUpload)
+
+	public function createUniqueName(Http\FileUpload $fileUpload): string
 	{
 		$ext = Utils::extension($fileUpload);
 		$nameSplit = str_split(sha1(microtime(true) . '.' . $fileUpload->getName()), $this->length);

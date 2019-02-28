@@ -11,10 +11,9 @@ class Utils
 {
 
 	/**
-	 * @param string|IStoreFile $relativePath
-	 * @return string
+	 * @param IStoreFile|string $relativePath
 	 */
-	public static function makeRelativePath($relativePath)
+	public static function makeRelativePath($relativePath): string
 	{
 		if ($relativePath instanceof IStoreFile) {
 			return $relativePath->getRelativePath();
@@ -23,22 +22,14 @@ class Utils
 		return $relativePath;
 	}
 
-	/**
-	 * @param Http\FileUpload $fileUpload
-	 * @return string|null
-	 */
-	public static function extension(Http\FileUpload $fileUpload)
+
+	public static function extension(Http\FileUpload $fileUpload): ?string
 	{
 		return pathinfo($fileUpload->getName(), PATHINFO_EXTENSION);
 	}
 
-	/**
-	 * @param ContentTypeFilter $contentTypeFilter
-	 * @param UploadControl $uploadControl
-	 * @param string $message
-	 * @return UploadControl
-	 */
-	public static function setMimeTypeRule(ContentTypeFilter $contentTypeFilter, UploadControl $uploadControl, $message)
+
+	public static function setMimeTypeRule(ContentTypeFilter $contentTypeFilter, UploadControl $uploadControl, string $message): UploadControl
 	{
 		$uploadControl->addRule(Form::MIME_TYPE, $message, $contentTypeFilter->getValues());
 		return $uploadControl;

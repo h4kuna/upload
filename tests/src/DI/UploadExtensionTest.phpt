@@ -25,7 +25,7 @@ eval($compiler->compile());
 
 $container = new \Container();
 
-Assert::type('Ftp', $container->getService('h4kuna.upload.ftp.dummy'));
-Assert::type('h4kuna\Upload\Driver\Ftp', $container->getService('h4kuna.upload.driver.dummy'));
-Assert::type('h4kuna\Upload\Download', $container->getService('h4kuna.upload.download.dummy'));
-Assert::type('h4kuna\Upload\Upload', $container->getService('h4kuna.upload.upload.dummy'));
+Assert::type(Ftp::class, $container->getService('h4kuna.upload.ftp.dummy'));
+Assert::type(h4kuna\Upload\Driver\Ftp::class, $container->getService('h4kuna.upload.driver.dummy'));
+Assert::type(h4kuna\Upload\Download::class, $container->getService('h4kuna.upload.download.dummy'));
+Assert::type(h4kuna\Upload\Upload::class, $container->getService('h4kuna.upload.upload.dummy'));

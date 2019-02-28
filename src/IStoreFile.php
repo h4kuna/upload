@@ -5,13 +5,10 @@ namespace h4kuna\Upload;
 interface IStoreFile
 {
 
-	/** @return string */
-	function getRelativePath();
+	function getRelativePath(): string;
 
-	/** @return string|NULL */
-	function getName();
+	function getName(): string;
 
-	/** @return string|NULL */
-	function getContentType();
+	function getContentType(): ?string;
 
 }

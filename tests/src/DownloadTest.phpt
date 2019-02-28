@@ -9,17 +9,19 @@ $container = require __DIR__ . '/../bootsrap-container.php';
 class TestFile implements IStoreFile
 {
 
-	public function getContentType()
+	public function getContentType(): ?string
 	{
 		return 'unknown';
 	}
 
-	public function getName()
+
+	public function getName(): string
 	{
 		return 'unknown';
 	}
 
-	public function getRelativePath()
+
+	public function getRelativePath(): string
 	{
 		return '/no/file/exists';
 	}

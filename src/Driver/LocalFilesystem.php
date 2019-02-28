@@ -11,27 +11,32 @@ class LocalFilesystem implements Upload\IDriver
 	/** @var string */
 	private $destinationDir;
 
-	public function __construct($destinationDir)
+
+	public function __construct(string $destinationDir)
 	{
 		$this->destinationDir = $destinationDir;
 	}
 
-	public function save(Http\FileUpload $fileUpload, $relativePath)
+
+	public function save(Http\FileUpload $fileUpload, $relativePath): void
 	{
 		$fileUpload->move($this->createURI($relativePath));
 	}
 
-	public function createURI($relativePath)
+
+	public function createURI($relativePath): string
 	{
 		return $this->destinationDir . DIRECTORY_SEPARATOR . Upload\Utils::makeRelativePath($relativePath);
 	}
 
-	public function isFileExists($relativePath)
+
+	public function isFileExists($relativePath): bool
 	{
 		return is_file($this->createURI($relativePath));
 	}
 
-	public function remove($relativePath)
+
+	public function remove($relativePath): bool
 	{
 		return @unlink($this->createURI($relativePath));
 	}

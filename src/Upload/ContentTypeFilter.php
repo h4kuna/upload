@@ -8,11 +8,12 @@ use Nette\Http;
 class ContentTypeFilter
 {
 
-	/** @var array */
-	private $values;
-
 	/** @var UploadControlFake */
 	private static $uploadControl;
+
+	/** @var string[] */
+	private $values;
+
 
 	public function __construct(...$values)
 	{
@@ -22,24 +23,23 @@ class ContentTypeFilter
 		}
 	}
 
-	/**
-	 * @param Http\FileUpload $fileUpload
-	 * @return bool
-	 */
-	public function isValid(Http\FileUpload $fileUpload)
+
+	public function isValid(Http\FileUpload $fileUpload): bool
 	{
 		return self::getUploadControl()->isValid($this, $fileUpload);
 	}
 
+
 	/**
-	 * @return array
+	 * @return string[]
 	 */
-	public function getValues()
+	public function getValues(): array
 	{
 		return $this->values;
 	}
 
-	private static function getUploadControl()
+
+	private static function getUploadControl(): UploadControlFake
 	{
 		if (self::$uploadControl === null) {
 			self::$uploadControl = new UploadControlFake;

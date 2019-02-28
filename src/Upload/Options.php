@@ -21,7 +21,8 @@ final class Options
 	/** @var ContentTypeFilter */
 	private $contentTypeFilter;
 
-	public function __construct($path = '', callable $extendStoredFile = null, IFileName $filename = null, ContentTypeFilter $contentTypeFilter = null)
+
+	public function __construct(string $path = '', ?callable $extendStoredFile = null, ?IFileName $filename = null, ?ContentTypeFilter $contentTypeFilter = null)
 	{
 		if ($path !== '') {
 			$path = trim($path, '\/') . DIRECTORY_SEPARATOR;
@@ -33,35 +34,26 @@ final class Options
 		$this->extendStoredFile = $extendStoredFile;
 	}
 
-	/**
-	 * @return string
-	 */
-	public function getPath()
+
+	public function getPath(): string
 	{
 		return $this->path;
 	}
 
-	/**
-	 * @param Store\File $storeFile
-	 * @param Http\FileUpload $fileUpload
-	 */
-	public function runExtendStoredFile(Store\File $storeFile, Http\FileUpload $fileUpload)
+
+	public function runExtendStoredFile(Store\File $storeFile, Http\FileUpload $fileUpload): void
 	{
 		$this->extendStoredFile !== null && call_user_func($this->extendStoredFile, $storeFile, $fileUpload);
 	}
 
-	/**
-	 * @return IFileName
-	 */
-	public function getFilename()
+
+	public function getFilename(): IFileName
 	{
 		return $this->filename;
 	}
 
-	/**
-	 * @return ContentTypeFilter|null
-	 */
-	public function getContentTypeFilter()
+
+	public function getContentTypeFilter(): ?ContentTypeFilter
 	{
 		return $this->contentTypeFilter;
 	}

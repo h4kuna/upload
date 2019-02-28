@@ -10,9 +10,6 @@ use Nette\Http;
 interface IFileName
 {
 
-	/**
-	 * @param Http\FileUpload $fileUpload
-	 * @return string
-	 */
-	function createUniqueName(Http\FileUpload $fileUpload);
+	function createUniqueName(Http\FileUpload $fileUpload): string;
+
 }

@@ -16,18 +16,19 @@ class Upload
 	/** @var Options[] */
 	private $uploadOptions = [];
 
+
 	public function __construct(IDriver $driver)
 	{
 		$this->driver = $driver;
 	}
 
+
 	/**
 	 * @param Http\FileUpload $fileUpload
 	 * @param Options|string|null $uploadOptions - string is path
-	 * @return Store\File
 	 * @throws Exceptions\FileUploadFailed
 	 */
-	public function save(Http\FileUpload $fileUpload, $uploadOptions = null)
+	public function save(Http\FileUpload $fileUpload, $uploadOptions = null): Store\File
 	{
 		if ($uploadOptions === null || is_scalar($uploadOptions)) {
 			$uploadOptions = $this->getUploadOptions((string) $uploadOptions);
@@ -38,11 +39,8 @@ class Upload
 		return self::saveFileUpload($fileUpload, $this->driver, $uploadOptions);
 	}
 
-	/**
-	 * @param string $key
-	 * @return Options
-	 */
-	private function getUploadOptions($key)
+
+	private function getUploadOptions(string $key): Options
 	{
 		if (!isset($this->uploadOptions[$key])) {
 			$this->uploadOptions[$key] = new Options($key);
@@ -50,18 +48,15 @@ class Upload
 		return $this->uploadOptions[$key];
 	}
 
+
 	/**
 	 * Output object save to database.
 	 * Don't forget use nette rule Form::MIME_TYPE and Form::IMAGE.
 	 * $fileUpload->isOk() nette call automatically.
-	 * @param Http\FileUpload $fileUpload
-	 * @param IDriver $driver
-	 * @param Options $uploadOptions
-	 * @return Store\File
 	 * @throws Exceptions\FileUploadFailed
 	 * @throws Exceptions\UnSupportedFileType
 	 */
-	public static function saveFileUpload(Http\FileUpload $fileUpload, IDriver $driver, Options $uploadOptions)
+	public static function saveFileUpload(Http\FileUpload $fileUpload, IDriver $driver, Options $uploadOptions): Store\File
 	{
 		if ($uploadOptions->getContentTypeFilter() && !$uploadOptions->getContentTypeFilter()->isValid($fileUpload)) { // if forgot use Utils::setMimeTypeRule();
 			throw new Exceptions\UnSupportedFileType('name: ' . $fileUpload->getName() . ', type: ' . $fileUpload->getContentType());

@@ -11,28 +11,25 @@ interface IDriver
 	 * Return string like absolute path or URL to file.
 	 * This return string will read by fopen function.
 	 * @param IStoreFile|string $relativePath
-	 * @return string
 	 */
-	function createURI($relativePath);
+	function createURI($relativePath): string;
 
 	/**
 	 * Check if file exists.
 	 * @var IStoreFile|string $relativePath
-	 * @return bool
 	 */
-	function isFileExists($relativePath);
+	function isFileExists($relativePath): bool;
 
 	/**
 	 * @param Http\FileUpload $fileUpload
 	 * @param IStoreFile|string $relativePath
 	 */
-	function save(Http\FileUpload $fileUpload, $relativePath);
+	function save(Http\FileUpload $fileUpload, $relativePath): void;
 
 	/**
 	 * Remove file from filesystem.
 	 * @param IStoreFile|string $relativePath
-	 * @return bool
 	 */
-	function remove($relativePath);
+	function remove($relativePath): bool;
 
 }

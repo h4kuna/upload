@@ -13,23 +13,26 @@ class File implements Upload\IStoreFile
 	/** @var string */
 	private $name;
 
-	/** @var string */
+	/** @var string|null */
 	private $contentType;
 
-	/** @var array */
+	/** @var mixed[] */
 	private $extend = [];
 
-	public function __construct($relativePath, $name, $contentType)
+
+	public function __construct(string $relativePath, string $name, ?string $contentType)
 	{
 		$this->relativePath = $relativePath;
 		$this->name = $name;
 		$this->contentType = $contentType;
 	}
 
+
 	public function __set($name, $value)
 	{
 		return $this->extend[$name] = $value;
 	}
+
 
 	public function __get($name)
 	{
@@ -40,29 +43,24 @@ class File implements Upload\IStoreFile
 		return $this->extend[$name];
 	}
 
-	/**
-	 * @return string
-	 */
-	public function getRelativePath()
+
+	public function getRelativePath(): string
 	{
 		return $this->relativePath;
 	}
 
-	/**
-	 * @return string
-	 */
-	public function getName()
+
+	public function getName(): string
 	{
 		return $this->name;
 	}
 
-	/**
-	 * @return string
-	 */
-	public function getContentType()
+
+	public function getContentType(): ?string
 	{
 		return $this->contentType;
 	}
+
 
 	public function __toString()
 	{
