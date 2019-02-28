@@ -37,7 +37,7 @@ class Ftp implements Upload\IDriver
 	public function save(Http\FileUpload $fileUpload, $relativePath): void
 	{
 		$path = Upload\Utils::makeRelativePath($relativePath);
-		$dir = dirname($relativePath);
+		$dir = dirname($path);
 		if ($dir !== '.') {
 			$this->ftp->mkDirRecursive($dir);
 		}

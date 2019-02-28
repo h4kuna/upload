@@ -18,7 +18,7 @@ final class Options
 	/** @var IFileName */
 	private $filename;
 
-	/** @var ContentTypeFilter */
+	/** @var ContentTypeFilter|null */
 	private $contentTypeFilter;
 
 

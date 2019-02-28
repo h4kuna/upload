@@ -2,6 +2,7 @@
 
 namespace h4kuna\Upload\Upload\Filename;
 
+use h4kuna\Upload\Exceptions\InvalidState;
 use h4kuna\Upload\Upload\IFileName;
 use h4kuna\Upload\Utils;
 use Nette\Http;
@@ -32,6 +33,9 @@ class UniquePath implements IFileName
 	{
 		$ext = Utils::extension($fileUpload);
 		$nameSplit = str_split(sha1(microtime(true) . '.' . $fileUpload->getName()), $this->length);
+		if ($nameSplit === false) {
+			throw new InvalidState('Split name is wrong.');
+		}
 		return implode(DIRECTORY_SEPARATOR, array_slice($nameSplit, 0, $this->middle)) . DIRECTORY_SEPARATOR . implode(array_slice($nameSplit, $this->middle)) . '.' . $ext;
 	}
 

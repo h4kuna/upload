@@ -23,11 +23,15 @@
 			"h4kuna\\Upload\\": "src/"
 		}
 	},
+	"autoload-dev": {
+		"files": ["tests/config/Ftp.php"]
+	},
 	"suggest": {
 		"dg/ftp-php": "to save on remote server via ftp h4kuna\\Upload\\Driver\\Ftp"
 	},
 	"require-dev": {
 		"salamium/testinium": "^0.1.2",
-		"mockery/mockery": "^0.9.9"
+		"mockery/mockery": "^0.9.9",
+		"phpstan/phpstan": "^0.11.2"
 	}
 }

@@ -58,7 +58,7 @@ class Upload
 	 */
 	public static function saveFileUpload(Http\FileUpload $fileUpload, IDriver $driver, Options $uploadOptions): Store\File
 	{
-		if ($uploadOptions->getContentTypeFilter() && !$uploadOptions->getContentTypeFilter()->isValid($fileUpload)) { // if forgot use Utils::setMimeTypeRule();
+		if ($uploadOptions->getContentTypeFilter() !== NULL && !$uploadOptions->getContentTypeFilter()->isValid($fileUpload)) { // if forgot use Utils::setMimeTypeRule();
 			throw new Exceptions\UnSupportedFileType('name: ' . $fileUpload->getName() . ', type: ' . $fileUpload->getContentType());
 		}
 
