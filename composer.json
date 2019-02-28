@@ -21,8 +21,7 @@
 	"autoload": {
 		"psr-4": {
 			"h4kuna\\Upload\\": "src/"
-		},
-		"files": ["src/exceptions.php"]
+		}
 	},
 	"suggest": {
 		"dg/ftp-php": "to save on remote server via ftp h4kuna\\Upload\\Driver\\Ftp"

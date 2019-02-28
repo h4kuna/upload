@@ -34,7 +34,7 @@ class File implements Upload\IStoreFile
 	public function __get($name)
 	{
 		if (!isset($this->extend[$name])) {
-			throw new Upload\InvalidArgumentException('This name "' . $name . '" does not exists.');
+			throw new Upload\Exceptions\InvalidArgument('This name "' . $name . '" does not exists.');
 		}
 
 		return $this->extend[$name];

@@ -2,6 +2,7 @@
 
 namespace h4kuna\Upload;
 
+use h4kuna\Upload\Exceptions\FileDownloadFailed;
 use Nette\Application;
 use Nette\Http;
 
@@ -39,14 +40,14 @@ class Download
 	/**
 	 * @param IStoreFile $file
 	 * @param bool $forceDownload
-	 * @throws FileDownloadFailedException
+	 * @throws FileDownloadFailed
 	 */
 	public function send(IStoreFile $file, $forceDownload = true)
 	{
 		try {
 			$this->createFileResponse($file, $forceDownload)->send($this->request, $this->response);
 		} catch (Application\BadRequestException $e) {
-			throw new FileDownloadFailedException($e->getMessage(), null, $e);
+			throw new FileDownloadFailed($e->getMessage(), 0, $e);
 		}
 	}
 }

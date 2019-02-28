@@ -2,7 +2,7 @@
 
 namespace h4kuna\Upload\Upload;
 
-use h4kuna\Upload\InvalidArgumentException;
+use h4kuna\Upload\Exceptions\InvalidArgument;
 use Nette\Http;
 
 class ContentTypeFilter
@@ -18,7 +18,7 @@ class ContentTypeFilter
 	{
 		$this->values = $values;
 		if ($values === []) {
-			throw new InvalidArgumentException('Parameter $values must be non-empty.');
+			throw new InvalidArgument('Parameter $values must be non-empty.');
 		}
 	}
 

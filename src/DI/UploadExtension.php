@@ -55,14 +55,14 @@ class UploadExtension extends DI\CompilerExtension
 		}
 
 		if (!$config['destinations']) {
-			throw new Upload\InvalidStateException('Destinations are empty! Fill it like path where to save files.');
+			throw new Upload\Exceptions\InvalidState('Destinations are empty! Fill it like path where to save files.');
 		}
 
 		$autowired = true;
 		foreach ($config['destinations'] as $info => $destination) {
 			if (is_string($destination)) {
 				if (!is_dir($destination)) {
-					throw new Upload\InvalidStateException('Create writable directory: "' . $destination . '"');
+					throw new Upload\Exceptions\InvalidState('Create writable directory: "' . $destination . '"');
 				}
 
 				$definition = $builder->addDefinition($this->prefix('driver.' . $info))

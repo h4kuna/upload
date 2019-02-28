@@ -37,8 +37,8 @@ class UploadSpecific
 	/**
 	 * @param Http\FileUpload $fileUpload
 	 * @return Store\File
-	 * @throws UnSupportedFileTypeException
-	 * @throws FileUploadFailedException
+	 * @throws Exceptions\UnSupportedFileType
+	 * @throws Exceptions\FileUploadFailed
 	 */
 	public function save(Http\FileUpload $fileUpload)
 	{

@@ -2,6 +2,9 @@
 
 namespace h4kuna\Upload;
 
+use h4kuna\Upload\Exceptions\FileUploadFailed;
+use h4kuna\Upload\Exceptions\InvalidArgument;
+use h4kuna\Upload\Exceptions\UnSupportedFileType;
 use Nette\Http;
 use Nette\Utils;
 use Tester\Assert;
@@ -35,7 +38,7 @@ Assert::contains('my/path/is/here/', (string) $storedFile);
 
 Assert::exception(function () use ($storedFile) {
 	$storedFile->foo;
-}, InvalidArgumentException::class);
+}, InvalidArgument::class);
 
 Assert::true($storedFile->size > 0);
 Assert::true($driver->isFileExists($storedFile));
@@ -46,15 +49,15 @@ Assert::false($driver->isFileExists($storedFile));
 // upload failed
 Assert::exception(function () use ($upload, $fileUploadFactory) {
 	$upload->save($fileUploadFactory->create('čivava.txt', UPLOAD_ERR_NO_FILE));
-}, FileUploadFailedException::class);
+}, FileUploadFailed::class);
 
 // upload failed
 Assert::exception(function () use ($upload, $fileUploadFactory) {
 	$upload->save($fileUploadFactory->create('čivava.txt'), []);
-}, InvalidArgumentException::class);
+}, InvalidArgument::class);
 
 // upload failed
 Assert::exception(function () use ($upload, $fileUploadFactory) {
 	$upload->save($fileUploadFactory->create('čivava.txt'), new \h4kuna\Upload\Upload\Options('', null, null, new \h4kuna\Upload\Upload\ContentTypeFilter('application/json')));
-}, UnSupportedFileTypeException::class);
+}, UnSupportedFileType::class);
 

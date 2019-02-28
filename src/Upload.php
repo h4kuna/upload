@@ -2,6 +2,7 @@
 
 namespace h4kuna\Upload;
 
+use h4kuna\Upload\Exceptions;
 use h4kuna\Upload\Store;
 use h4kuna\Upload\Upload\Options;
 use Nette\Http;
@@ -24,14 +25,14 @@ class Upload
 	 * @param Http\FileUpload $fileUpload
 	 * @param Options|string|null $uploadOptions - string is path
 	 * @return Store\File
-	 * @throws FileUploadFailedException
+	 * @throws Exceptions\FileUploadFailed
 	 */
 	public function save(Http\FileUpload $fileUpload, $uploadOptions = null)
 	{
 		if ($uploadOptions === null || is_scalar($uploadOptions)) {
 			$uploadOptions = $this->getUploadOptions((string) $uploadOptions);
 		} elseif (!$uploadOptions instanceof Options) {
-			throw new InvalidArgumentException('Second parameter must be instance of UploadOptions or null or string.');
+			throw new Exceptions\InvalidArgument('Second parameter must be instance of UploadOptions or null or string.');
 		}
 
 		return self::saveFileUpload($fileUpload, $this->driver, $uploadOptions);
@@ -57,13 +58,13 @@ class Upload
 	 * @param IDriver $driver
 	 * @param Options $uploadOptions
 	 * @return Store\File
-	 * @throws FileUploadFailedException
-	 * @throws UnSupportedFileTypeException
+	 * @throws Exceptions\FileUploadFailed
+	 * @throws Exceptions\UnSupportedFileType
 	 */
 	public static function saveFileUpload(Http\FileUpload $fileUpload, IDriver $driver, Options $uploadOptions)
 	{
 		if ($uploadOptions->getContentTypeFilter() && !$uploadOptions->getContentTypeFilter()->isValid($fileUpload)) { // if forgot use Utils::setMimeTypeRule();
-			throw new UnSupportedFileTypeException('name: ' . $fileUpload->getName() . ', type: ' . $fileUpload->getContentType());
+			throw new Exceptions\UnSupportedFileType('name: ' . $fileUpload->getName() . ', type: ' . $fileUpload->getContentType());
 		}
 
 		do {
@@ -77,7 +78,7 @@ class Upload
 		try {
 			$driver->save($fileUpload, $relativePath);
 		} catch (\Exception $e) {
-			throw new FileUploadFailedException('Driver "' . get_class($driver) . '" failed.', null, $e);
+			throw new Exceptions\FileUploadFailed('Driver "' . get_class($driver) . '" failed.', 0, $e);
 		}
 
 		return $storeFile;

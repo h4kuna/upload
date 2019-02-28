@@ -8,7 +8,7 @@ include __DIR__ . '/../../bootsrap.php';
 
 Assert::exception(function () {
 	new ContentTypeFilter();
-}, \h4kuna\Upload\InvalidArgumentException::class);
+}, \h4kuna\Upload\Exceptions\InvalidArgument::class);
 
 class FileUpload extends \Nette\Http\FileUpload
 {

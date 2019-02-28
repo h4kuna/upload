@@ -31,5 +31,5 @@ $download = $container->getService('uploadExtension.download.public');
 
 Assert::exception(function () use ($download) {
 	$download->send(new TestFile());
-}, \h4kuna\Upload\FileDownloadFailedException::class);
+}, \h4kuna\Upload\Exceptions\FileDownloadFailed::class);
 
