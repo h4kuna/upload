@@ -42,6 +42,3 @@ Assert::true($ftpDriver->remove($relative1));
 $relative2 = $upload->save($fileUploadFactory->create('home.txt'), 'sub/dir');
 // die($ftpDriver->createURI($relative2));
 Assert::true($ftpDriver->remove($relative2));
-
-
-
